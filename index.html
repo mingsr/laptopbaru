@@ -1563,6 +1563,15 @@ async function api(action, data = {}, showLoader = false) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// CRYPTO — SHA-256 (Web Crypto API)
+// ─────────────────────────────────────────────────────────────
+async function sha256(str) {
+  const buf    = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  const bytes  = Array.from(new Uint8Array(buf));
+  return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
 // TOKEN & AUTH
 // ─────────────────────────────────────────────────────────────
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
@@ -1619,8 +1628,9 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   btnEl.disabled = true;
   txtEl.textContent = 'Memproses...';
 
-  // Backend menerima password_hash sebagai plain text (bukan hashed dari frontend)
-  const res = await api('login', { username, password_hash: password });
+  // Backend menyimpan password sebagai SHA-256 hash, jadi kita hash dulu
+  const hashed = await sha256(password);
+  const res = await api('login', { username, password_hash: hashed });
 
   btnEl.disabled = false;
   txtEl.textContent = 'Masuk';
@@ -2439,8 +2449,10 @@ document.getElementById('btn-save-pw').addEventListener('click', async () => {
   errEl.style.display = 'none';
   document.getElementById('btn-save-pw').disabled = true;
 
-  // Backend menerima plain password (sesuai dengan handleChangePassword di GAS)
-  const res = await api('changePassword', { old_password_hash: lama, new_password_hash: baru });
+  // Hash kedua password sebelum dikirim ke backend
+  const lamaHash = await sha256(lama);
+  const baruHash = await sha256(baru);
+  const res = await api('changePassword', { old_password_hash: lamaHash, new_password_hash: baruHash });
 
   document.getElementById('btn-save-pw').disabled = false;
 
