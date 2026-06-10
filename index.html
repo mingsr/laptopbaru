@@ -1546,22 +1546,41 @@ const TOKEN_KEY = 'nabung_token';
  */
 async function api(action, data = {}, showLoader = false) {
   if (showLoader) showLoading();
+
   const token = getToken();
+
   try {
+    const form = new URLSearchParams();
+    form.append(
+      "payload",
+      JSON.stringify({
+        action,
+        token,
+        data
+      })
+    );
+
     const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, token, data }),
+      method: "POST",
+      body: form
     });
+
     const json = await res.json();
+
     if (showLoader) hideLoading();
+
     return json;
+
   } catch (err) {
+
     if (showLoader) hideLoading();
-    return { success: false, error: 'Gagal terhubung ke server: ' + err.message };
+
+    return {
+      success: false,
+      error: err.message
+    };
   }
 }
-
 // ─────────────────────────────────────────────────────────────
 // CRYPTO — SHA-256 (Web Crypto API)
 // ─────────────────────────────────────────────────────────────
