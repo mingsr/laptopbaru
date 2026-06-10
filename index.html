@@ -1630,6 +1630,14 @@ document.getElementById('btn-login').addEventListener('click', async () => {
 
   // Backend menyimpan password sebagai SHA-256 hash, jadi kita hash dulu
   const hashed = await sha256(password);
+  console.log("Password asli:", password);
+  console.log("HASH:", hashed);
+
+  const res = await api('login', {
+    username,
+    password_hash: hashed
+  });
+  
   const res = await api('login', { username, password_hash: hashed });
 
   btnEl.disabled = false;
