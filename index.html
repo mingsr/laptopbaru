@@ -1552,16 +1552,12 @@ async function api(action, data = {}, showLoader = false) {
   try {
     const form = new URLSearchParams();
     form.append(
-      "payload",
-      JSON.stringify({
-        action,
-        token,
-        data
-      })
+      'payload',
+      JSON.stringify({ action, token, data })
     );
 
     const res = await fetch(API_URL, {
-      method: "POST",
+      method: 'POST',
       body: form
     });
 
@@ -1572,21 +1568,17 @@ async function api(action, data = {}, showLoader = false) {
     return json;
 
   } catch (err) {
-
     if (showLoader) hideLoading();
-
-    return {
-      success: false,
-      error: err.message
-    };
+    return { success: false, error: err.message };
   }
 }
+
 // ─────────────────────────────────────────────────────────────
 // CRYPTO — SHA-256 (Web Crypto API)
 // ─────────────────────────────────────────────────────────────
 async function sha256(str) {
-  const buf    = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  const bytes  = Array.from(new Uint8Array(buf));
+  const buf   = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  const bytes = Array.from(new Uint8Array(buf));
   return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
@@ -1599,10 +1591,7 @@ function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
 async function initApp() {
   const token = getToken();
-  if (!token) {
-    showLogin();
-    return;
-  }
+  if (!token) { showLogin(); return; }
   const res = await api('validateToken');
   if (res.success) {
     showApp(res.data.username);
@@ -1621,21 +1610,21 @@ function showLogin() {
 function showApp(username) {
   document.getElementById('login-page').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  // Set user info
   const uname = username || 'admin';
   document.getElementById('sidebar-username').textContent = uname;
   document.getElementById('sidebar-avatar').textContent = uname.charAt(0).toUpperCase();
-  // Set today date
-  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
 }
 
 // LOGIN
 document.getElementById('btn-login').addEventListener('click', async () => {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
-  const errEl = document.getElementById('login-error');
-  const btnEl = document.getElementById('btn-login');
-  const txtEl = document.getElementById('login-btn-text');
+  const errEl    = document.getElementById('login-error');
+  const btnEl    = document.getElementById('btn-login');
+  const txtEl    = document.getElementById('login-btn-text');
 
   if (!username || !password) {
     errEl.textContent = 'Username dan kata sandi wajib diisi.';
@@ -1647,16 +1636,10 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   btnEl.disabled = true;
   txtEl.textContent = 'Memproses...';
 
-  // Backend menyimpan password sebagai SHA-256 hash, jadi kita hash dulu
   const hashed = await sha256(password);
-  console.log("Password asli:", password);
-  console.log("HASH:", hashed);
 
-  const res = await api('login', {
-    username,
-    password_hash: hashed
-  });
-  
+  const res = await api('login', { username, password_hash: hashed });
+
   btnEl.disabled = false;
   txtEl.textContent = 'Masuk';
 
@@ -1670,7 +1653,6 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   }
 });
 
-// Enter key on login
 document.getElementById('login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('btn-login').click();
 });
@@ -1689,27 +1671,24 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 // NAVIGATION
 // ─────────────────────────────────────────────────────────────
 const PAGE_LOADERS = {
-  dashboard   : loadDashboard,
-  transaksi   : () => { txState.offset = 0; loadTransaksi(); },
-  nabung      : loadNabungPage,
-  target      : loadTargetPage,
+  dashboard    : loadDashboard,
+  transaksi    : () => { txState.offset = 0; loadTransaksi(); },
+  nabung       : loadNabungPage,
+  target       : loadTargetPage,
   'hall-of-fame': loadHallOfFame,
-  pencapaian  : loadPencapaian,
-  riwayat     : () => { riwayatState.offset = 0; loadRiwayat(); },
-  pengaturan  : () => {},
+  pencapaian   : loadPencapaian,
+  riwayat      : () => { riwayatState.offset = 0; loadRiwayat(); },
+  pengaturan   : () => {},
 };
 
 function goTo(pageId) {
-  // Update nav items
   document.querySelectorAll('.nav-item').forEach(el => {
     el.classList.toggle('active', el.dataset.page === pageId);
   });
-  // Show/hide pages
   document.querySelectorAll('.page').forEach(el => {
     el.classList.toggle('active', el.id === 'page-' + pageId);
   });
   closeSidebar();
-  // Load data
   if (PAGE_LOADERS[pageId]) PAGE_LOADERS[pageId]();
 }
 
@@ -1717,11 +1696,11 @@ document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => goTo(item.dataset.page));
 });
 
-// Mobile sidebar
 document.getElementById('btn-hamburger').addEventListener('click', () => {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebar-overlay').classList.add('open');
 });
+
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('open');
@@ -1736,25 +1715,41 @@ function rp(num) {
   return 'Rp' + Number(num).toLocaleString('id-ID');
 }
 
-/** Format tanggal YYYY-MM-DD → DD MMM YYYY */
+/**
+ * Format tanggal YYYY-MM-DD → DD MMM YYYY
+ * Menggunakan konstruktor Date dengan komponen eksplisit untuk menghindari
+ * UTC off-by-one (new Date("YYYY-MM-DD") adalah UTC midnight).
+ */
 function formatDate(str) {
   if (!str) return '—';
-  const d = new Date(str);
-  if (isNaN(d)) return str;
-  return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+  // Ambil hanya 10 karakter pertama (YYYY-MM-DD)
+  const s = String(str).substring(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return str;
+  const parts = s.split('-');
+  // new Date(year, monthIndex, day) — lokal, bukan UTC
+  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  if (isNaN(d.getTime())) return str;
+  return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-/** Hari ini format YYYY-MM-DD */
+/**
+ * Hari ini format YYYY-MM-DD menggunakan waktu lokal browser.
+ * PERBAIKAN: Sebelumnya pakai toISOString() yang UTC → off-by-one di Jakarta pagi hari.
+ */
 function today() {
-  return new Date().toISOString().substring(0, 10);
+  const d     = new Date();
+  const year  = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day   = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /** Badge HTML berdasarkan tipe transaksi */
 function txBadge(tipe) {
   const map = {
-    INCOME: ['badge-income', 'Pemasukan'],
-    EXPENSE: ['badge-expense', 'Pengeluaran'],
-    SAVING: ['badge-saving', 'Tabungan'],
+    INCOME:     ['badge-income',     'Pemasukan'],
+    EXPENSE:    ['badge-expense',    'Pengeluaran'],
+    SAVING:     ['badge-saving',     'Tabungan'],
     WITHDRAWAL: ['badge-withdrawal', 'Tarik'],
   };
   const [cls, label] = map[tipe] || ['badge-ghost', tipe];
@@ -1764,9 +1759,9 @@ function txBadge(tipe) {
 /** Warna nominal berdasarkan tipe */
 function txColor(tipe) {
   return {
-    INCOME: 'var(--success)',
-    EXPENSE: 'var(--danger)',
-    SAVING: 'var(--primary)',
+    INCOME:     'var(--success)',
+    EXPENSE:    'var(--danger)',
+    SAVING:     'var(--primary)',
     WITHDRAWAL: 'var(--secondary)',
   }[tipe] || 'var(--text)';
 }
@@ -1780,7 +1775,7 @@ function txSign(tipe) {
 // TOAST
 // ─────────────────────────────────────────────────────────────
 function showToast(msg, type = 'info', sub = '', duration = 3500) {
-  const icons = { success:'✅', error:'❌', info:'💬', achievement:'🏆' };
+  const icons = { success: '✅', error: '❌', info: '💬', achievement: '🏆' };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.innerHTML = `
@@ -1812,7 +1807,6 @@ function hideLoading() { document.getElementById('loading-overlay').style.displa
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Close modal on overlay click
 document.querySelectorAll('.modal-overlay').forEach(ov => {
   ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
 });
@@ -1835,25 +1829,32 @@ async function loadDashboard() {
 
   // Target
   if (d.target) {
-    document.getElementById('dash-target-name').textContent = d.target.nama_target;
+    document.getElementById('dash-target-name').textContent    = d.target.nama_target;
     document.getElementById('dash-target-nominal').textContent = rp(d.target.target_nominal);
-    document.getElementById('dash-saving').textContent = rp(d.target.total_saving);
-    document.getElementById('dash-persen').textContent = d.target.persen.toFixed(1) + '%';
-    document.getElementById('dash-progress-bar').style.width = d.target.persen + '%';
-    document.getElementById('dash-kurang').textContent = rp(d.target.kurang);
-    document.getElementById('dash-prediksi').textContent = d.target.prediksi_selesai ? formatDate(d.target.prediksi_selesai) : 'Belum bisa diprediksi';
+    document.getElementById('dash-saving').textContent         = rp(d.target.total_saving);
+    document.getElementById('dash-persen').textContent         = d.target.persen.toFixed(1) + '%';
+    document.getElementById('dash-progress-bar').style.width  = Math.min(d.target.persen, 100) + '%';
+    document.getElementById('dash-kurang').textContent         = rp(d.target.kurang);
+    document.getElementById('dash-prediksi').textContent       = d.target.prediksi_selesai
+      ? formatDate(d.target.prediksi_selesai)
+      : 'Belum bisa diprediksi';
   } else {
-    document.getElementById('dash-target-name').textContent = 'Tidak ada target aktif';
+    document.getElementById('dash-target-name').textContent    = 'Tidak ada target aktif';
     document.getElementById('dash-target-nominal').textContent = '—';
+    document.getElementById('dash-saving').textContent         = '—';
+    document.getElementById('dash-persen').textContent         = '0%';
+    document.getElementById('dash-progress-bar').style.width  = '0%';
+    document.getElementById('dash-kurang').textContent         = '—';
+    document.getElementById('dash-prediksi').textContent       = '—';
   }
 
   // Level
   if (d.level) {
     document.getElementById('dash-level-icon').textContent = d.level.icon;
     document.getElementById('dash-level-name').textContent = d.level.nama;
-    document.getElementById('dash-level-num').textContent = 'LVL ' + d.level.level;
-    document.getElementById('dash-xp-bar').style.width = d.level.progress_persen + '%';
-    document.getElementById('dash-xp-persen').textContent = d.level.progress_persen.toFixed(0) + '%';
+    document.getElementById('dash-level-num').textContent  = 'LVL ' + d.level.level;
+    document.getElementById('dash-xp-bar').style.width     = d.level.progress_persen + '%';
+    document.getElementById('dash-xp-persen').textContent  = d.level.progress_persen.toFixed(0) + '%';
     document.getElementById('dash-level-next').textContent = d.level.next_nama ? '→ ' + d.level.next_nama : 'Level Maks!';
     document.getElementById('sidebar-level-label').textContent = 'Lvl ' + d.level.level + ' · ' + d.level.nama;
   }
@@ -1863,13 +1864,13 @@ async function loadDashboard() {
 
   // Summary 30 days
   const s = d.summary_30days || {};
-  document.getElementById('dash-income30').textContent = rp(s.total_income || 0);
+  document.getElementById('dash-income30').textContent  = rp(s.total_income  || 0);
   document.getElementById('dash-expense30').textContent = rp(s.total_expense || 0);
-  document.getElementById('dash-saving30').textContent = rp(s.total_saving || 0);
+  document.getElementById('dash-saving30').textContent  = rp(s.total_saving  || 0);
 
   // Achievements
   document.getElementById('dash-ach-count').textContent = (d.unlocked_achievements || 0) + '/' + (d.total_achievements || 0);
-  document.getElementById('dash-ach-sub').textContent = 'dari ' + (d.total_achievements || 0) + ' pencapaian';
+  document.getElementById('dash-ach-sub').textContent   = 'dari ' + (d.total_achievements || 0) + ' pencapaian';
 
   // Recent achievements
   const achList = document.getElementById('dash-ach-list');
@@ -1894,28 +1895,35 @@ async function loadDashboard() {
   buildCalendar(d.saving_dates || []);
 }
 
+/**
+ * Render bar chart 7 hari.
+ * PERBAIKAN: Label menggunakan komponen lokal (bukan new Date(str) yang UTC).
+ */
 function buildChart7Days(data) {
   const ctx = document.getElementById('chart-7days').getContext('2d');
   if (chart7days) chart7days.destroy();
 
-  Chart.defaults.color = '#888';
+  Chart.defaults.color       = '#888';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
   chart7days = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: data.map(d => {
-        const dt = new Date(d.tanggal);
-        return dt.toLocaleDateString('id-ID', { weekday:'short', day:'numeric' });
+        // Parse YYYY-MM-DD secara lokal untuk menghindari UTC off-by-one
+        const parts = String(d.tanggal).split('-');
+        const dt    = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        return dt.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' });
       }),
       datasets: [
-        { label: 'Pemasukan', data: data.map(d => d.income), backgroundColor: 'rgba(0,255,157,0.6)', borderRadius: 3 },
-        { label: 'Pengeluaran', data: data.map(d => d.expense), backgroundColor: 'rgba(255,77,77,0.6)', borderRadius: 3 },
-        { label: 'Nabung', data: data.map(d => d.saving), backgroundColor: 'rgba(255,214,0,0.7)', borderRadius: 3 },
+        { label: 'Pemasukan',   data: data.map(d => d.income),  backgroundColor: 'rgba(0,255,157,0.6)',  borderRadius: 3 },
+        { label: 'Pengeluaran', data: data.map(d => d.expense), backgroundColor: 'rgba(255,77,77,0.6)',  borderRadius: 3 },
+        { label: 'Nabung',      data: data.map(d => d.saving),  backgroundColor: 'rgba(255,214,0,0.7)',  borderRadius: 3 },
       ],
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } } },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 10 } } },
@@ -1925,20 +1933,29 @@ function buildChart7Days(data) {
   });
 }
 
+/**
+ * Render kalender konsistensi 90 hari.
+ * PERBAIKAN: Menggunakan komponen tanggal lokal, bukan toISOString() yang UTC.
+ */
 function buildCalendar(savingDates) {
   const savingSet = new Set(savingDates);
   const container = document.getElementById('cal-container');
-  const DAYS = 90;
+  const DAYS      = 90;
   const today_str = today();
   let html = '<div class="cal-grid">';
+
   for (let i = DAYS - 1; i >= 0; i--) {
-    const d = new Date();
+    const d     = new Date();
     d.setDate(d.getDate() - i);
-    const s = d.toISOString().substring(0, 10);
+    const year  = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day   = String(d.getDate()).padStart(2, '0');
+    const s     = `${year}-${month}-${day}`;
     const isActive = savingSet.has(s);
-    const isToday = s === today_str;
+    const isToday  = s === today_str;
     html += `<div class="cal-dot ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" title="${s}"></div>`;
   }
+
   html += '</div>';
   container.innerHTML = html;
 }
@@ -1953,8 +1970,8 @@ const txState = { offset: 0, limit: 20, total: 0, filters: {} };
 async function loadTransaksi() {
   const { tipe, dari, sampai } = txState.filters;
   const params = { limit: txState.limit, offset: txState.offset };
-  if (tipe) params.tipe = tipe;
-  if (dari) params.tanggal_mulai = dari;
+  if (tipe)   params.tipe           = tipe;
+  if (dari)   params.tanggal_mulai  = dari;
   if (sampai) params.tanggal_selesai = sampai;
 
   const res = await api('getTransactions', params);
@@ -1985,14 +2002,13 @@ function renderTxTable(rows) {
     </tr>
   `).join('');
 
-  // Store current rows for edit lookup
   window._txRows = rows;
 }
 
 function renderTxPagination() {
   const from = txState.offset + 1;
   const to   = Math.min(txState.offset + txState.limit, txState.total);
-  document.getElementById('tx-pagination-info').textContent = txState.total ? `${from}–${to} dari ${txState.total} transaksi` : 'Tidak ada data';
+  document.getElementById('tx-pagination-info').textContent    = txState.total ? `${from}–${to} dari ${txState.total} transaksi` : 'Tidak ada data';
   document.getElementById('btn-tx-prev').disabled = txState.offset === 0;
   document.getElementById('btn-tx-next').disabled = txState.offset + txState.limit >= txState.total;
 }
@@ -2010,8 +2026,8 @@ document.getElementById('btn-tx-next').addEventListener('click', () => {
 
 document.getElementById('btn-filter-tx').addEventListener('click', () => {
   txState.filters = {
-    tipe: document.getElementById('filter-tipe').value,
-    dari: document.getElementById('filter-dari').value,
+    tipe:   document.getElementById('filter-tipe').value,
+    dari:   document.getElementById('filter-dari').value,
     sampai: document.getElementById('filter-sampai').value,
   };
   txState.offset = 0;
@@ -2019,23 +2035,23 @@ document.getElementById('btn-filter-tx').addEventListener('click', () => {
 });
 
 document.getElementById('btn-reset-filter').addEventListener('click', () => {
-  document.getElementById('filter-tipe').value = '';
-  document.getElementById('filter-dari').value = '';
+  document.getElementById('filter-tipe').value   = '';
+  document.getElementById('filter-dari').value   = '';
   document.getElementById('filter-sampai').value = '';
   txState.filters = {};
-  txState.offset = 0;
+  txState.offset  = 0;
   loadTransaksi();
 });
 
 // Tambah Transaksi (INCOME/EXPENSE)
 document.getElementById('btn-add-tx').addEventListener('click', () => {
-  document.getElementById('tx-edit-id').value = '';
+  document.getElementById('tx-edit-id').value          = '';
   document.getElementById('modal-tx-title').textContent = 'Tambah Transaksi';
-  document.getElementById('tx-tipe').value = 'INCOME';
-  document.getElementById('tx-tanggal').value = today();
-  document.getElementById('tx-kategori').value = '';
-  document.getElementById('tx-nominal').value = '';
-  document.getElementById('tx-keterangan').value = '';
+  document.getElementById('tx-tipe').value             = 'INCOME';
+  document.getElementById('tx-tanggal').value          = today();
+  document.getElementById('tx-kategori').value         = '';
+  document.getElementById('tx-nominal').value          = '';
+  document.getElementById('tx-keterangan').value       = '';
   openModal('modal-tx');
 });
 
@@ -2043,13 +2059,13 @@ function openEditTx(id) {
   const row = (window._txRows || []).find(r => String(r.id) === String(id));
   if (!row) { showToast('Data tidak ditemukan', 'error'); return; }
 
-  document.getElementById('tx-edit-id').value = row.id;
+  document.getElementById('tx-edit-id').value          = row.id;
   document.getElementById('modal-tx-title').textContent = 'Edit Transaksi';
-  document.getElementById('tx-tipe').value = row.tipe;
-  document.getElementById('tx-tanggal').value = String(row.tanggal).substring(0, 10);
-  document.getElementById('tx-kategori').value = row.kategori;
-  document.getElementById('tx-nominal').value = row.nominal;
-  document.getElementById('tx-keterangan').value = row.keterangan || '';
+  document.getElementById('tx-tipe').value             = row.tipe;
+  document.getElementById('tx-tanggal').value          = String(row.tanggal).substring(0, 10);
+  document.getElementById('tx-kategori').value         = row.kategori;
+  document.getElementById('tx-nominal').value          = row.nominal;
+  document.getElementById('tx-keterangan').value       = row.keterangan || '';
   openModal('modal-tx');
 }
 
@@ -2064,7 +2080,8 @@ document.getElementById('btn-save-tx').addEventListener('click', async () => {
   if (!tanggal || !kategori || !nominal) { showToast('Semua kolom wajib diisi', 'error'); return; }
   if (Number(nominal) <= 0) { showToast('Nominal harus lebih dari 0', 'error'); return; }
 
-  document.getElementById('btn-save-tx').disabled = true;
+  const btn = document.getElementById('btn-save-tx');
+  btn.disabled = true;
 
   let res;
   if (id) {
@@ -2073,7 +2090,7 @@ document.getElementById('btn-save-tx').addEventListener('click', async () => {
     res = await api('addTransaction', { tipe, tanggal, kategori, nominal: Number(nominal), keterangan: ket });
   }
 
-  document.getElementById('btn-save-tx').disabled = false;
+  btn.disabled = false;
 
   if (res.success) {
     closeModal('modal-tx');
@@ -2102,13 +2119,11 @@ async function deleteTx(id) {
 // NABUNG & TARIK
 // ─────────────────────────────────────────────────────────────
 async function loadNabungPage() {
-  // Set default dates
   document.getElementById('nabung-tanggal').value = today();
-  document.getElementById('tarik-tanggal').value = today();
+  document.getElementById('tarik-tanggal').value  = today();
 
-  // Load target info
   const res = await api('getTarget');
-  const el = document.getElementById('nabung-target-info');
+  const el  = document.getElementById('nabung-target-info');
   if (res.success && res.data) {
     const t = res.data;
     el.innerHTML = `
@@ -2117,7 +2132,7 @@ async function loadNabungPage() {
         <span style="font-family:var(--font-num);font-size:1.5rem;color:var(--text)">${t.persen.toFixed(1)}%</span>
       </div>
       <div class="progress-wrap mb-1">
-        <div class="progress-bar yellow" style="width:${t.persen}%"></div>
+        <div class="progress-bar yellow" style="width:${Math.min(t.persen, 100)}%"></div>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted)">
         <span>Terkumpul: <span style="color:var(--primary)">${rp(t.total_saving)}</span></span>
@@ -2130,46 +2145,63 @@ async function loadNabungPage() {
   }
 }
 
+/**
+ * Submit nabung atau tarik.
+ * PERBAIKAN: Tombol di-disable selama request berlangsung untuk mencegah double-submit.
+ */
 async function doSaving(isSaving) {
-  const prefix  = isSaving ? 'nabung' : 'tarik';
-  const nominal = document.getElementById(`${prefix}-nominal`).value;
-  const tanggal = document.getElementById(`${prefix}-tanggal`).value;
+  const prefix   = isSaving ? 'nabung' : 'tarik';
+  const nominal  = document.getElementById(`${prefix}-nominal`).value;
+  const tanggal  = document.getElementById(`${prefix}-tanggal`).value;
   const kategori = document.getElementById(`${prefix}-kategori`).value.trim();
-  const ket     = document.getElementById(`${prefix}-ket`).value.trim();
+  const ket      = document.getElementById(`${prefix}-ket`).value.trim();
+  const btn      = document.getElementById(`btn-${prefix}`);
 
-  if (!nominal || !tanggal || !kategori) { showToast('Nominal, tanggal, dan kategori wajib diisi', 'error'); return; }
-  if (Number(nominal) <= 0) { showToast('Nominal harus lebih dari 0', 'error'); return; }
+  if (!nominal || !tanggal || !kategori) {
+    showToast('Nominal, tanggal, dan kategori wajib diisi', 'error');
+    return;
+  }
+  if (Number(nominal) <= 0) {
+    showToast('Nominal harus lebih dari 0', 'error');
+    return;
+  }
 
-  // Perlu target_id
+  btn.disabled = true;
+
   const targetRes = await api('getTarget');
-  if (!targetRes.success) { showToast('Tidak ada target aktif. Buat target terlebih dahulu.', 'error'); return; }
+  if (!targetRes.success || !targetRes.data) {
+    showToast('Tidak ada target aktif. Buat target terlebih dahulu.', 'error');
+    btn.disabled = false;
+    return;
+  }
   const targetId = targetRes.data.id;
 
   const tipe = isSaving ? 'SAVING' : 'WITHDRAWAL';
-  const res = await api('addTransaction', {
+  const res  = await api('addTransaction', {
     tipe,
     tanggal,
     kategori,
-    nominal: Number(nominal),
+    nominal:    Number(nominal),
     keterangan: ket,
-    target_id: targetId,
+    target_id:  String(targetId),
   }, true);
+
+  btn.disabled = false;
 
   if (res.success) {
     showToast(isSaving ? 'Tabungan berhasil disimpan! 💰' : 'Penarikan berhasil dicatat.', 'success');
     if (res.data && res.data.new_achievements) showAchievementToasts(res.data.new_achievements);
-    // Reset form
-    document.getElementById(`${prefix}-nominal`).value = '';
+    document.getElementById(`${prefix}-nominal`).value  = '';
     document.getElementById(`${prefix}-kategori`).value = '';
-    document.getElementById(`${prefix}-ket`).value = '';
-    loadNabungPage(); // Refresh target info
+    document.getElementById(`${prefix}-ket`).value      = '';
+    loadNabungPage();
   } else {
     showToast(res.error || 'Gagal menyimpan', 'error');
   }
 }
 
 document.getElementById('btn-nabung').addEventListener('click', () => doSaving(true));
-document.getElementById('btn-tarik').addEventListener('click', () => doSaving(false));
+document.getElementById('btn-tarik').addEventListener('click',  () => doSaving(false));
 
 // ─────────────────────────────────────────────────────────────
 // TARGET PAGE
@@ -2177,7 +2209,7 @@ document.getElementById('btn-tarik').addEventListener('click', () => doSaving(fa
 let _currentTarget = null;
 
 async function loadTargetPage() {
-  const res = await api('getTarget');
+  const res     = await api('getTarget');
   const section = document.getElementById('target-active-section');
   const noTarget = document.getElementById('target-no-target');
 
@@ -2207,7 +2239,7 @@ async function loadTargetPage() {
         <span class="target-persen">${t.persen.toFixed(1)}%</span>
       </div>
       <div class="progress-wrap mb-2">
-        <div class="progress-bar yellow" style="width:${t.persen}%"></div>
+        <div class="progress-bar yellow" style="width:${Math.min(t.persen, 100)}%"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem">
         <div class="stat-card c-red" style="padding:0.875rem">
@@ -2233,36 +2265,41 @@ async function loadTargetPage() {
     </div>
   `;
 
-  // Attach events
   document.getElementById('btn-edit-target')?.addEventListener('click', () => {
     document.getElementById('modal-target-title').textContent = 'Edit Target';
-    document.getElementById('target-nama').value = t.nama_target;
-    document.getElementById('target-nominal-input').value = t.target_nominal;
-    document.getElementById('btn-save-target').dataset.mode = 'edit';
+    document.getElementById('target-nama').value              = t.nama_target;
+    document.getElementById('target-nominal-input').value     = t.target_nominal;
+    document.getElementById('btn-save-target').dataset.mode   = 'edit';
     openModal('modal-target');
   });
 
   document.getElementById('btn-complete-target')?.addEventListener('click', () => {
-    openConfirm('Tandai Target Selesai', `Kamu akan menandai target "${t.nama_target}" sebagai SELESAI dan menyimpannya ke Papan Prestasi. Lanjutkan?`, async () => {
-      const res2 = await api('completeTarget', {}, true);
-      if (res2.success) {
-        showToast('Selamat! 🎉 Target berhasil diselesaikan!', 'success');
-        loadTargetPage();
-      } else {
-        showToast(res2.error || 'Gagal', 'error');
+    openConfirm(
+      'Tandai Target Selesai',
+      `Kamu akan menandai target "${t.nama_target}" sebagai SELESAI dan menyimpannya ke Papan Prestasi. Lanjutkan?`,
+      async () => {
+        const res2 = await api('completeTarget', {}, true);
+        if (res2.success) {
+          showToast('Selamat! 🎉 Target berhasil diselesaikan!', 'success');
+          loadTargetPage();
+        } else {
+          showToast(res2.error || 'Gagal', 'error');
+        }
       }
-    });
+    );
   });
 
   document.getElementById('btn-nabung-now')?.addEventListener('click', () => goTo('nabung'));
 }
 
-document.getElementById('btn-buat-target-empty')?.addEventListener('click', () => {
-  document.getElementById('modal-target-title').textContent = 'Buat Target Baru';
-  document.getElementById('target-nama').value = '';
-  document.getElementById('target-nominal-input').value = '';
-  document.getElementById('btn-save-target').dataset.mode = 'create';
-  openModal('modal-target');
+document.addEventListener('click', e => {
+  if (e.target.id === 'btn-buat-target-empty') {
+    document.getElementById('modal-target-title').textContent = 'Buat Target Baru';
+    document.getElementById('target-nama').value              = '';
+    document.getElementById('target-nominal-input').value     = '';
+    document.getElementById('btn-save-target').dataset.mode   = 'create';
+    openModal('modal-target');
+  }
 });
 
 document.getElementById('btn-save-target').addEventListener('click', async () => {
@@ -2273,7 +2310,8 @@ document.getElementById('btn-save-target').addEventListener('click', async () =>
   if (!nama || !nominal) { showToast('Nama target dan nominal wajib diisi', 'error'); return; }
   if (Number(nominal) <= 0) { showToast('Nominal harus lebih dari 0', 'error'); return; }
 
-  document.getElementById('btn-save-target').disabled = true;
+  const btn = document.getElementById('btn-save-target');
+  btn.disabled = true;
 
   let res;
   if (mode === 'edit') {
@@ -2282,7 +2320,7 @@ document.getElementById('btn-save-target').addEventListener('click', async () =>
     res = await api('createTarget', { nama_target: nama, target_nominal: Number(nominal) });
   }
 
-  document.getElementById('btn-save-target').disabled = false;
+  btn.disabled = false;
 
   if (res.success) {
     closeModal('modal-target');
@@ -2290,17 +2328,6 @@ document.getElementById('btn-save-target').addEventListener('click', async () =>
     loadTargetPage();
   } else {
     showToast(res.error || 'Gagal menyimpan target', 'error');
-  }
-});
-
-// "Buat Target Baru" button (from empty state - re-attach if needed)
-document.addEventListener('click', e => {
-  if (e.target.id === 'btn-buat-target-empty') {
-    document.getElementById('modal-target-title').textContent = 'Buat Target Baru';
-    document.getElementById('target-nama').value = '';
-    document.getElementById('target-nominal-input').value = '';
-    document.getElementById('btn-save-target').dataset.mode = 'create';
-    openModal('modal-target');
   }
 });
 
@@ -2343,15 +2370,13 @@ async function loadPencapaian() {
 
   const { achievements, total, total_unlocked } = res.data;
 
-  // Update progress
-  document.getElementById('ach-count-display').textContent = `${total_unlocked}/${total}`;
-  document.getElementById('ach-subtitle').textContent = `${total_unlocked} dari ${total} pencapaian terbuka`;
-  document.getElementById('ach-main-progress').style.width = total > 0 ? ((total_unlocked / total) * 100) + '%' : '0%';
+  document.getElementById('ach-count-display').textContent   = `${total_unlocked}/${total}`;
+  document.getElementById('ach-subtitle').textContent        = `${total_unlocked} dari ${total} pencapaian terbuka`;
+  document.getElementById('ach-main-progress').style.width   = total > 0 ? ((total_unlocked / total) * 100) + '%' : '0%';
 
-  // Render grid: unlocked first
   const sorted = [...achievements].sort((a, b) => {
-    if (a.is_unlocked && !b.is_unlocked) return -1;
-    if (!a.is_unlocked && b.is_unlocked) return 1;
+    if (a.is_unlocked && !b.is_unlocked)  return -1;
+    if (!a.is_unlocked && b.is_unlocked)  return  1;
     return 0;
   });
 
@@ -2374,8 +2399,8 @@ const riwayatState = { offset: 0, limit: 30, total: 0, filters: {} };
 async function loadRiwayat() {
   const { tipe, dari, sampai } = riwayatState.filters;
   const params = { limit: riwayatState.limit, offset: riwayatState.offset };
-  if (tipe) params.tipe = tipe;
-  if (dari) params.tanggal_mulai = dari;
+  if (tipe)   params.tipe            = tipe;
+  if (dari)   params.tanggal_mulai   = dari;
   if (sampai) params.tanggal_selesai = sampai;
 
   const res = await api('getTransactions', params);
@@ -2398,7 +2423,6 @@ async function loadRiwayat() {
     `).join('');
   }
 
-  // Pagination
   const from = riwayatState.offset + 1;
   const to   = Math.min(riwayatState.offset + riwayatState.limit, riwayatState.total);
   document.getElementById('riwayat-pagination-info').textContent = riwayatState.total ? `${from}–${to} dari ${riwayatState.total}` : 'Tidak ada data';
@@ -2419,8 +2443,8 @@ document.getElementById('btn-riwayat-next').addEventListener('click', () => {
 
 document.getElementById('btn-filter-riwayat').addEventListener('click', () => {
   riwayatState.filters = {
-    tipe: document.getElementById('riwayat-filter-tipe').value,
-    dari: document.getElementById('riwayat-filter-dari').value,
+    tipe:   document.getElementById('riwayat-filter-tipe').value,
+    dari:   document.getElementById('riwayat-filter-dari').value,
     sampai: document.getElementById('riwayat-filter-sampai').value,
   };
   riwayatState.offset = 0;
@@ -2428,11 +2452,11 @@ document.getElementById('btn-filter-riwayat').addEventListener('click', () => {
 });
 
 document.getElementById('btn-reset-riwayat').addEventListener('click', () => {
-  document.getElementById('riwayat-filter-tipe').value = '';
-  document.getElementById('riwayat-filter-dari').value = '';
+  document.getElementById('riwayat-filter-tipe').value   = '';
+  document.getElementById('riwayat-filter-dari').value   = '';
   document.getElementById('riwayat-filter-sampai').value = '';
   riwayatState.filters = {};
-  riwayatState.offset = 0;
+  riwayatState.offset  = 0;
   loadRiwayat();
 });
 
@@ -2442,10 +2466,10 @@ document.getElementById('btn-reset-riwayat').addEventListener('click', () => {
 
 // Ganti Password
 document.getElementById('btn-open-ganti-pw').addEventListener('click', () => {
-  document.getElementById('pw-lama').value = '';
-  document.getElementById('pw-baru').value = '';
-  document.getElementById('pw-konfirmasi').value = '';
-  document.getElementById('pw-error').style.display = 'none';
+  document.getElementById('pw-lama').value              = '';
+  document.getElementById('pw-baru').value              = '';
+  document.getElementById('pw-konfirmasi').value        = '';
+  document.getElementById('pw-error').style.display     = 'none';
   openModal('modal-pw');
 });
 
@@ -2472,14 +2496,14 @@ document.getElementById('btn-save-pw').addEventListener('click', async () => {
   }
 
   errEl.style.display = 'none';
-  document.getElementById('btn-save-pw').disabled = true;
+  const btn = document.getElementById('btn-save-pw');
+  btn.disabled = true;
 
-  // Hash kedua password sebelum dikirim ke backend
   const lamaHash = await sha256(lama);
   const baruHash = await sha256(baru);
   const res = await api('changePassword', { old_password_hash: lamaHash, new_password_hash: baruHash });
 
-  document.getElementById('btn-save-pw').disabled = false;
+  btn.disabled = false;
 
   if (res.success) {
     closeModal('modal-pw');
@@ -2494,19 +2518,18 @@ document.getElementById('btn-save-pw').addEventListener('click', async () => {
 // Backup
 document.getElementById('btn-backup').addEventListener('click', async () => {
   showLoading();
-  // Ambil semua transaksi tanpa limit
-  const res = await api('getTransactions', { limit: 99999, offset: 0 });
+  const res       = await api('getTransactions', { limit: 99999, offset: 0 });
   const targetRes = await api('getTarget');
-  const hofRes = await api('getHallOfFame');
-  const achRes = await api('getAchievements');
+  const hofRes    = await api('getHallOfFame');
+  const achRes    = await api('getAchievements');
   hideLoading();
 
   const backup = {
-    backup_date: new Date().toISOString(),
-    transactions: res.success ? res.data.transactions : [],
-    target: targetRes.success ? targetRes.data : null,
-    hall_of_fame: hofRes.success ? hofRes.data.hall_of_fame : [],
-    achievements: achRes.success ? achRes.data.achievements.filter(a => a.is_unlocked) : [],
+    backup_date  : new Date().toISOString(),
+    transactions : res.success ? res.data.transactions : [],
+    target       : targetRes.success ? targetRes.data : null,
+    hall_of_fame : hofRes.success ? hofRes.data.hall_of_fame : [],
+    achievements : achRes.success ? achRes.data.achievements.filter(a => a.is_unlocked) : [],
   };
 
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
@@ -2530,27 +2553,31 @@ document.getElementById('restore-file').addEventListener('change', async (e) => 
     try { data = JSON.parse(ev.target.result); }
     catch { showToast('File backup tidak valid', 'error'); return; }
 
-    openConfirm('Pulihkan Data', `File backup tanggal ${data.backup_date ? formatDate(data.backup_date.substring(0,10)) : '?'} akan dimuat. Data lama akan tetap ada. Lanjutkan?`, async () => {
-      if (!data.transactions || !data.transactions.length) {
-        showToast('Tidak ada data transaksi dalam file backup', 'info');
-        return;
+    openConfirm(
+      'Pulihkan Data',
+      `File backup tanggal ${data.backup_date ? formatDate(data.backup_date.substring(0, 10)) : '?'} akan dimuat. Data lama akan tetap ada. Lanjutkan?`,
+      async () => {
+        if (!data.transactions || !data.transactions.length) {
+          showToast('Tidak ada data transaksi dalam file backup', 'info');
+          return;
+        }
+        showLoading();
+        let ok = 0, fail = 0;
+        for (const tx of data.transactions) {
+          const res = await api('addTransaction', {
+            tanggal    : String(tx.tanggal).substring(0, 10),
+            tipe       : tx.tipe,
+            kategori   : tx.kategori,
+            nominal    : tx.nominal,
+            keterangan : tx.keterangan || '',
+            target_id  : tx.target_id  || '',
+          });
+          if (res.success) ok++; else fail++;
+        }
+        hideLoading();
+        showToast(`Restore selesai: ${ok} berhasil, ${fail} gagal`, fail > 0 ? 'info' : 'success');
       }
-      showLoading();
-      let ok = 0, fail = 0;
-      for (const tx of data.transactions) {
-        const res = await api('addTransaction', {
-          tanggal: String(tx.tanggal).substring(0, 10),
-          tipe: tx.tipe,
-          kategori: tx.kategori,
-          nominal: tx.nominal,
-          keterangan: tx.keterangan || '',
-          target_id: tx.target_id || '',
-        });
-        if (res.success) ok++; else fail++;
-      }
-      hideLoading();
-      showToast(`Restore selesai: ${ok} berhasil, ${fail} gagal`, fail > 0 ? 'info' : 'success');
-    });
+    );
   };
   reader.readAsText(file);
   e.target.value = '';
@@ -2558,32 +2585,37 @@ document.getElementById('restore-file').addEventListener('change', async (e) => 
 
 // Reset Data
 document.getElementById('btn-open-reset').addEventListener('click', () => {
-  openConfirm('⚠️ Reset Semua Data', 'Tindakan ini akan menghapus SEMUA transaksi. Data tidak dapat dipulihkan! Apakah kamu benar-benar yakin?', async () => {
-    // Hapus semua transaksi satu per satu (tidak ada endpoint reset langsung)
-    showLoading();
-    const res = await api('getTransactions', { limit: 99999, offset: 0 });
-    if (!res.success) { hideLoading(); showToast('Gagal memuat data', 'error'); return; }
+  openConfirm(
+    '⚠️ Reset Semua Data',
+    'Tindakan ini akan menghapus SEMUA transaksi. Data tidak dapat dipulihkan! Apakah kamu benar-benar yakin?',
+    async () => {
+      showLoading();
+      const res = await api('getTransactions', { limit: 99999, offset: 0 });
+      if (!res.success) { hideLoading(); showToast('Gagal memuat data', 'error'); return; }
 
-    let deleted = 0;
-    for (const tx of res.data.transactions) {
-      const delRes = await api('deleteTransaction', { id: tx.id });
-      if (delRes.success) deleted++;
+      let deleted = 0;
+      for (const tx of res.data.transactions) {
+        const delRes = await api('deleteTransaction', { id: tx.id });
+        if (delRes.success) deleted++;
+      }
+      hideLoading();
+      showToast(`${deleted} transaksi berhasil dihapus`, 'success');
     }
-    hideLoading();
-    showToast(`${deleted} transaksi berhasil dihapus`, 'success');
-  });
+  );
 });
 
 // ─────────────────────────────────────────────────────────────
 // CONFIRM MODAL
 // ─────────────────────────────────────────────────────────────
 let _confirmCallback = null;
+
 function openConfirm(title, msg, callback) {
   document.getElementById('confirm-title').textContent = title;
-  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-msg').textContent   = msg;
   _confirmCallback = callback;
   openModal('modal-confirm');
 }
+
 document.getElementById('btn-confirm-ok').addEventListener('click', () => {
   closeModal('modal-confirm');
   if (_confirmCallback) { _confirmCallback(); _confirmCallback = null; }
