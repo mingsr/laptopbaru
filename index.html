@@ -375,6 +375,7 @@ body {
 .stat-card.c-cyan::before { background: var(--secondary); }
 .stat-card.c-green::before { background: var(--success); }
 .stat-card.c-red::before { background: var(--danger); }
+.stat-card.c-purple::before { background: #a855f7; }
 
 .stat-label {
   font-family: var(--font-mono);
@@ -395,6 +396,7 @@ body {
 .stat-value.cyan { color: var(--secondary); }
 .stat-value.green { color: var(--success); }
 .stat-value.red { color: var(--danger); }
+.stat-value.purple { color: #a855f7; }
 .stat-sub {
   font-size: 0.72rem;
   color: var(--muted);
@@ -506,6 +508,21 @@ body {
   height: 180px;
 }
 .chart-wrap canvas { width: 100% !important; }
+.chart-wrap-tall {
+  position: relative;
+  width: 100%;
+  height: 240px;
+}
+.chart-wrap-tall canvas { width: 100% !important; }
+.chart-wrap-pie {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chart-wrap-pie canvas { max-width: 260px; max-height: 260px; }
 
 /* ─── FORM ─────────────────────────────────────────────────── */
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -795,6 +812,47 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
 .flex-center { display: flex; align-items: center; gap: 0.75rem; }
 
+/* ─── SIMULATOR RESULT ──────────────────────────────────────── */
+.sim-result-card {
+  background: linear-gradient(135deg, rgba(255,214,0,0.05), rgba(0,229,255,0.03));
+  border: 1px solid rgba(255,214,0,0.15);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+.sim-milestone-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.85rem;
+}
+.sim-milestone-row:last-child { border-bottom: none; }
+.sim-milestone-pct {
+  font-family: var(--font-num);
+  font-size: 1.3rem;
+  color: var(--primary);
+  min-width: 52px;
+}
+.sim-milestone-info { flex: 1; color: var(--muted); font-size: 0.8rem; }
+.sim-milestone-date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--secondary);
+}
+
+/* ─── KATEGORI TABLE ─────────────────────────────────────────── */
+.kat-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.kat-bar-label { font-size: 0.8rem; min-width: 110px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kat-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 99px; height: 5px; overflow: hidden; }
+.kat-bar-fill { height: 100%; border-radius: 99px; }
+.kat-bar-pct { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); min-width: 42px; text-align: right; }
+
 /* ─── RESPONSIVE ────────────────────────────────────────────── */
 @media (max-width: 900px) {
   #sidebar { transform: translateX(-100%); }
@@ -811,6 +869,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .hof-card { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   .hof-rank { font-size: 1.5rem; }
+  .sim-milestone-row { flex-wrap: wrap; }
 }
 
 /* Sidebar overlay for mobile */
@@ -862,6 +921,35 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   margin-bottom: 1rem;
   line-height: 1.5;
 }
+
+/* Statistik tabs */
+.tab-group {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+.tab-btn {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.15s;
+  text-align: center;
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: #000;
+  font-weight: 700;
+}
+.tab-btn:hover:not(.active) { color: var(--text); }
 </style>
 </head>
 <body>
@@ -905,7 +993,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   <aside id="sidebar">
     <div class="sidebar-header">
       <h1>💰 Nabung</h1>
-      <p>MASA DEPAN v1.0</p>
+      <p>MASA DEPAN v1.1</p>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Utama</div>
@@ -919,7 +1007,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
       <div class="nav-item" data-page="nabung">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></svg>
-        Nabung & Tarik
+        Nabung &amp; Tarik
       </div>
       <div class="nav-section">Target</div>
       <div class="nav-item" data-page="target">
@@ -934,6 +1022,14 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
       <div class="nav-item" data-page="pencapaian">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21H5a2 2 0 01-2-2v-2a5 5 0 015-5h8a5 5 0 015 5v2a2 2 0 01-2 2h-3"/><circle cx="12" cy="7" r="4"/></svg>
         Pencapaian
+      </div>
+      <div class="nav-item" data-page="statistik">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Statistik Bulanan
+      </div>
+      <div class="nav-item" data-page="simulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Simulator
       </div>
       <div class="nav-item" data-page="riwayat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
@@ -998,7 +1094,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
           <!-- Level & Streak -->
           <div style="display:flex;flex-direction:column;gap:1rem">
             <div class="card">
-              <div class="card-title">Level & XP</div>
+              <div class="card-title">Level &amp; XP</div>
               <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
                 <span id="dash-level-icon" style="font-size:2rem">🥚</span>
                 <div>
@@ -1144,7 +1240,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
     <div id="page-nabung" class="page">
       <div class="page-header">
         <div class="page-header-left">
-          <div class="page-title">Nabung & Tarik</div>
+          <div class="page-title">Nabung &amp; Tarik</div>
           <div class="page-subtitle">Kelola tabungan menuju target</div>
         </div>
       </div>
@@ -1268,6 +1364,177 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
     </div>
 
+    <!-- ──────────────────── STATISTIK BULANAN ────────────── -->
+    <div id="page-statistik" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Statistik Bulanan</div>
+          <div class="page-subtitle">Analisis keuangan per bulan</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <!-- Filter bulan & tahun -->
+        <div class="card mb-3">
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-field" style="margin:0;flex:1;min-width:120px">
+              <label>Bulan</label>
+              <select id="stat-filter-bulan">
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+              </select>
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:100px">
+              <label>Tahun</label>
+              <input type="number" id="stat-filter-tahun" placeholder="2025" min="2000" max="2100" />
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-stat-apply">Terapkan</button>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="grid-4 mb-3" id="stat-summary-cards">
+          <div class="stat-card c-green">
+            <div class="stat-label">Total Pemasukan</div>
+            <div class="stat-value green" id="stat-income">Rp0</div>
+          </div>
+          <div class="stat-card c-red">
+            <div class="stat-label">Total Pengeluaran</div>
+            <div class="stat-value red" id="stat-expense">Rp0</div>
+          </div>
+          <div class="stat-card c-yellow">
+            <div class="stat-label">Total Tabungan</div>
+            <div class="stat-value yellow" id="stat-saving">Rp0</div>
+          </div>
+          <div class="stat-card c-cyan">
+            <div class="stat-label">Saldo Bersih</div>
+            <div class="stat-value cyan" id="stat-saldo">Rp0</div>
+          </div>
+        </div>
+
+        <!-- Jumlah transaksi -->
+        <div class="card mb-3" style="padding:1rem 1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+          <div>
+            <div class="stat-label" style="margin-bottom:0.2rem">Jumlah Transaksi Bulan Ini</div>
+            <div style="font-family:var(--font-num);font-size:2rem;color:var(--text)" id="stat-jumlah-tx">0</div>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div class="stat-label" style="margin-bottom:0.2rem">Net Tabungan (Nabung − Tarik)</div>
+            <div style="font-family:var(--font-num);font-size:2rem;" id="stat-net-saving">Rp0</div>
+          </div>
+        </div>
+
+        <!-- Pie chart pengeluaran + Bar chart harian -->
+        <div class="grid-2 mb-3">
+          <div class="card">
+            <div class="card-title">Komposisi Pengeluaran per Kategori</div>
+            <div class="chart-wrap-pie" id="stat-pie-wrap">
+              <canvas id="chart-expense-pie"></canvas>
+            </div>
+            <div id="stat-pie-empty" style="display:none;text-align:center;padding:2rem;color:var(--muted);font-size:0.875rem">
+              📊 Tidak ada data pengeluaran pada periode ini.
+            </div>
+            <div id="stat-pie-legend" style="margin-top:0.75rem"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Aktivitas Harian Bulan Ini</div>
+            <div class="chart-wrap-tall">
+              <canvas id="chart-stat-daily"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kategori breakdown detail -->
+        <div class="card mb-3">
+          <div class="flex-between mb-2">
+            <div class="card-title" style="margin-bottom:0">Detail Kategori</div>
+            <div class="tab-group" id="stat-kat-tabs">
+              <button class="tab-btn active" data-tipe="EXPENSE">Pengeluaran</button>
+              <button class="tab-btn" data-tipe="INCOME">Pemasukan</button>
+              <button class="tab-btn" data-tipe="SAVING">Tabungan</button>
+            </div>
+          </div>
+          <div id="stat-kat-list">
+            <div class="empty-state" style="padding:1.5rem"><p>Tidak ada data</p></div>
+          </div>
+        </div>
+
+        <!-- Tren bulanan -->
+        <div class="card">
+          <div class="flex-between mb-3">
+            <div class="card-title" style="margin-bottom:0">Tren Bulanan</div>
+            <div class="tab-group" id="trend-tab-group">
+              <button class="tab-btn active" data-months="6">6 Bulan</button>
+              <button class="tab-btn" data-months="12">12 Bulan</button>
+            </div>
+          </div>
+          <div class="chart-wrap-tall">
+            <canvas id="chart-trend"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────── SIMULATOR ─────────────────────── -->
+    <div id="page-simulator" class="page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Simulator Target</div>
+          <div class="page-subtitle">Hitung estimasi waktu mencapai target tabungan</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="grid-2">
+          <!-- Input form -->
+          <div class="card">
+            <div class="card-title">⚙️ Parameter Simulasi</div>
+            <div class="form-field">
+              <label>Target Nominal (Rp)</label>
+              <input type="number" id="sim-target" placeholder="Contoh: 20000000" min="1" />
+              <div class="form-hint">Jumlah uang yang ingin dicapai</div>
+            </div>
+            <div class="form-field">
+              <label>Tabungan Saat Ini (Rp)</label>
+              <input type="number" id="sim-current" placeholder="0 jika belum ada tabungan" min="0" value="0" />
+              <div class="form-hint">Nominal yang sudah terkumpul sekarang</div>
+            </div>
+            <div class="form-field">
+              <label>Nominal Menabung (Rp)</label>
+              <input type="number" id="sim-amount" placeholder="Contoh: 50000" min="1" />
+              <div class="form-hint">Jumlah yang akan ditabung setiap periode</div>
+            </div>
+            <div class="form-field">
+              <label>Frekuensi Menabung</label>
+              <select id="sim-freq">
+                <option value="daily">Harian (setiap hari)</option>
+                <option value="weekly">Mingguan (setiap 7 hari)</option>
+                <option value="monthly">Bulanan (setiap 30 hari)</option>
+              </select>
+            </div>
+            <p id="sim-error" style="color:var(--danger);font-size:0.8rem;display:none;margin-bottom:0.75rem"></p>
+            <button class="btn btn-primary btn-full" id="btn-sim-hitung">🔍 Hitung Estimasi</button>
+          </div>
+
+          <!-- Result -->
+          <div id="sim-result-wrap">
+            <div class="empty-state" style="padding:3rem 1rem">
+              <div class="empty-icon">🧮</div>
+              <p>Isi parameter di sebelah kiri lalu klik <strong>Hitung Estimasi</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ──────────────────── RIWAYAT ───────────────────────── -->
     <div id="page-riwayat" class="page">
       <div class="page-header">
@@ -1386,7 +1653,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
           <div class="settings-section-header">Informasi Aplikasi</div>
           <div class="settings-row">
             <div class="settings-label">Versi</div>
-            <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted)">1.0.0</div>
+            <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted)">1.1.0</div>
           </div>
           <div class="settings-row">
             <div class="settings-label">Backend</div>
@@ -1539,34 +1806,18 @@ const TOKEN_KEY = 'nabung_token';
 // ─────────────────────────────────────────────────────────────
 // API LAYER
 // ─────────────────────────────────────────────────────────────
-
-/**
- * Kirim request ke backend GAS.
- * Semua request adalah POST dengan body { action, token?, data? }
- */
-async function api(action, data = {}, showLoader = false) {
+async function api(action, data, showLoader) {
+  data = data || {};
+  showLoader = showLoader || false;
   if (showLoader) showLoading();
-
-  const token = getToken();
-
+  var token = getToken();
   try {
-    const form = new URLSearchParams();
-    form.append(
-      'payload',
-      JSON.stringify({ action, token, data })
-    );
-
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      body: form
-    });
-
-    const json = await res.json();
-
+    var form = new URLSearchParams();
+    form.append('payload', JSON.stringify({ action: action, token: token, data: data }));
+    var res = await fetch(API_URL, { method: 'POST', body: form });
+    var json = await res.json();
     if (showLoader) hideLoading();
-
     return json;
-
   } catch (err) {
     if (showLoader) hideLoading();
     return { success: false, error: err.message };
@@ -1577,9 +1828,9 @@ async function api(action, data = {}, showLoader = false) {
 // CRYPTO — SHA-256 (Web Crypto API)
 // ─────────────────────────────────────────────────────────────
 async function sha256(str) {
-  const buf   = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  const bytes = Array.from(new Uint8Array(buf));
-  return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+  var buf   = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  var bytes = Array.from(new Uint8Array(buf));
+  return bytes.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1590,9 +1841,9 @@ function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
 function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
 async function initApp() {
-  const token = getToken();
+  var token = getToken();
   if (!token) { showLogin(); return; }
-  const res = await api('validateToken');
+  var res = await api('validateToken');
   if (res.success) {
     showApp(res.data.username);
     loadDashboard();
@@ -1610,7 +1861,7 @@ function showLogin() {
 function showApp(username) {
   document.getElementById('login-page').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  const uname = username || 'admin';
+  var uname = username || 'admin';
   document.getElementById('sidebar-username').textContent = uname;
   document.getElementById('sidebar-avatar').textContent = uname.charAt(0).toUpperCase();
   document.getElementById('dash-date').textContent = new Date().toLocaleDateString('id-ID', {
@@ -1619,12 +1870,12 @@ function showApp(username) {
 }
 
 // LOGIN
-document.getElementById('btn-login').addEventListener('click', async () => {
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-  const errEl    = document.getElementById('login-error');
-  const btnEl    = document.getElementById('btn-login');
-  const txtEl    = document.getElementById('login-btn-text');
+document.getElementById('btn-login').addEventListener('click', async function() {
+  var username = document.getElementById('login-username').value.trim();
+  var password = document.getElementById('login-password').value;
+  var errEl    = document.getElementById('login-error');
+  var btnEl    = document.getElementById('btn-login');
+  var txtEl    = document.getElementById('login-btn-text');
 
   if (!username || !password) {
     errEl.textContent = 'Username dan kata sandi wajib diisi.';
@@ -1636,9 +1887,8 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   btnEl.disabled = true;
   txtEl.textContent = 'Memproses...';
 
-  const hashed = await sha256(password);
-
-  const res = await api('login', { username, password_hash: hashed });
+  var hashed = await sha256(password);
+  var res = await api('login', { username: username, password_hash: hashed });
 
   btnEl.disabled = false;
   txtEl.textContent = 'Masuk';
@@ -1653,15 +1903,15 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   }
 });
 
-document.getElementById('login-password').addEventListener('keydown', e => {
+document.getElementById('login-password').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') document.getElementById('btn-login').click();
 });
-document.getElementById('login-username').addEventListener('keydown', e => {
+document.getElementById('login-username').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') document.getElementById('login-password').focus();
 });
 
 // LOGOUT
-document.getElementById('btn-logout').addEventListener('click', () => {
+document.getElementById('btn-logout').addEventListener('click', function() {
   clearToken();
   showLogin();
   showToast('Berhasil keluar.', 'info');
@@ -1670,33 +1920,35 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 // ─────────────────────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────────────────────
-const PAGE_LOADERS = {
-  dashboard    : loadDashboard,
-  transaksi    : () => { txState.offset = 0; loadTransaksi(); },
-  nabung       : loadNabungPage,
-  target       : loadTargetPage,
-  'hall-of-fame': loadHallOfFame,
-  pencapaian   : loadPencapaian,
-  riwayat      : () => { riwayatState.offset = 0; loadRiwayat(); },
-  pengaturan   : () => {},
+var PAGE_LOADERS = {
+  dashboard      : loadDashboard,
+  transaksi      : function() { txState.offset = 0; loadTransaksi(); },
+  nabung         : loadNabungPage,
+  target         : loadTargetPage,
+  'hall-of-fame' : loadHallOfFame,
+  pencapaian     : loadPencapaian,
+  statistik      : loadStatistik,
+  simulator      : function() {},
+  riwayat        : function() { riwayatState.offset = 0; loadRiwayat(); },
+  pengaturan     : function() {},
 };
 
 function goTo(pageId) {
-  document.querySelectorAll('.nav-item').forEach(el => {
+  document.querySelectorAll('.nav-item').forEach(function(el) {
     el.classList.toggle('active', el.dataset.page === pageId);
   });
-  document.querySelectorAll('.page').forEach(el => {
+  document.querySelectorAll('.page').forEach(function(el) {
     el.classList.toggle('active', el.id === 'page-' + pageId);
   });
   closeSidebar();
   if (PAGE_LOADERS[pageId]) PAGE_LOADERS[pageId]();
 }
 
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => goTo(item.dataset.page));
+document.querySelectorAll('.nav-item').forEach(function(item) {
+  item.addEventListener('click', function() { goTo(item.dataset.page); });
 });
 
-document.getElementById('btn-hamburger').addEventListener('click', () => {
+document.getElementById('btn-hamburger').addEventListener('click', function() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebar-overlay').classList.add('open');
 });
@@ -1709,54 +1961,39 @@ function closeSidebar() {
 // ─────────────────────────────────────────────────────────────
 // UTILITIES
 // ─────────────────────────────────────────────────────────────
-
-/** Format angka ke Rupiah. Contoh: 10000 → "Rp10.000" */
 function rp(num) {
   return 'Rp' + Number(num).toLocaleString('id-ID');
 }
 
-/**
- * Format tanggal YYYY-MM-DD → DD MMM YYYY
- * Menggunakan konstruktor Date dengan komponen eksplisit untuk menghindari
- * UTC off-by-one (new Date("YYYY-MM-DD") adalah UTC midnight).
- */
 function formatDate(str) {
   if (!str) return '—';
-  // Ambil hanya 10 karakter pertama (YYYY-MM-DD)
-  const s = String(str).substring(0, 10);
+  var s = String(str).substring(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return str;
-  const parts = s.split('-');
-  // new Date(year, monthIndex, day) — lokal, bukan UTC
-  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  var parts = s.split('-');
+  var d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
   if (isNaN(d.getTime())) return str;
   return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-/**
- * Hari ini format YYYY-MM-DD menggunakan waktu lokal browser.
- * PERBAIKAN: Sebelumnya pakai toISOString() yang UTC → off-by-one di Jakarta pagi hari.
- */
 function today() {
-  const d     = new Date();
-  const year  = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day   = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  var d     = new Date();
+  var year  = d.getFullYear();
+  var month = String(d.getMonth() + 1).padStart(2, '0');
+  var day   = String(d.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
 }
 
-/** Badge HTML berdasarkan tipe transaksi */
 function txBadge(tipe) {
-  const map = {
+  var map = {
     INCOME:     ['badge-income',     'Pemasukan'],
     EXPENSE:    ['badge-expense',    'Pengeluaran'],
     SAVING:     ['badge-saving',     'Tabungan'],
     WITHDRAWAL: ['badge-withdrawal', 'Tarik'],
   };
-  const [cls, label] = map[tipe] || ['badge-ghost', tipe];
-  return `<span class="badge ${cls}">${label}</span>`;
+  var pair = map[tipe] || ['badge-ghost', tipe];
+  return '<span class="badge ' + pair[0] + '">' + pair[1] + '</span>';
 }
 
-/** Warna nominal berdasarkan tipe */
 function txColor(tipe) {
   return {
     INCOME:     'var(--success)',
@@ -1766,31 +2003,37 @@ function txColor(tipe) {
   }[tipe] || 'var(--text)';
 }
 
-/** Prefix nominal (+/-) */
 function txSign(tipe) {
   return (tipe === 'INCOME' || tipe === 'SAVING') ? '+' : '-';
+}
+
+function getNowMonthYear() {
+  var d = new Date();
+  return { month: d.getMonth() + 1, year: d.getFullYear() };
 }
 
 // ─────────────────────────────────────────────────────────────
 // TOAST
 // ─────────────────────────────────────────────────────────────
-function showToast(msg, type = 'info', sub = '', duration = 3500) {
-  const icons = { success: '✅', error: '❌', info: '💬', achievement: '🏆' };
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `
-    <div class="toast-icon">${icons[type] || '💬'}</div>
-    <div><div class="toast-msg">${msg}</div>${sub ? `<div class="toast-sub">${sub}</div>` : ''}</div>
-  `;
+function showToast(msg, type, sub, duration) {
+  type = type || 'info';
+  sub = sub || '';
+  duration = duration || 3500;
+  var icons = { success: '✅', error: '❌', info: '💬', achievement: '🏆' };
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = '<div class="toast-icon">' + (icons[type] || '💬') + '</div>' +
+    '<div><div class="toast-msg">' + msg + '</div>' +
+    (sub ? '<div class="toast-sub">' + sub + '</div>' : '') + '</div>';
   document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), duration);
+  setTimeout(function() { el.remove(); }, duration);
 }
 
 function showAchievementToasts(list) {
   if (!list || !list.length) return;
-  list.forEach((a, i) => {
-    setTimeout(() => {
-      showToast(`${a.icon} ${a.nama}`, 'achievement', a.deskripsi, 5000);
+  list.forEach(function(a, i) {
+    setTimeout(function() {
+      showToast(a.icon + ' ' + a.nama, 'achievement', a.deskripsi, 5000);
     }, i * 800);
   });
 }
@@ -1807,27 +2050,25 @@ function hideLoading() { document.getElementById('loading-overlay').style.displa
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-document.querySelectorAll('.modal-overlay').forEach(ov => {
-  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+  ov.addEventListener('click', function(e) { if (e.target === ov) ov.classList.remove('open'); });
 });
 
 // ─────────────────────────────────────────────────────────────
 // DASHBOARD
 // ─────────────────────────────────────────────────────────────
-let chart7days = null;
+var chart7days = null;
 
 async function loadDashboard() {
-  const res = await api('getDashboard');
+  var res = await api('getDashboard');
   if (!res.success) { showToast(res.error || 'Gagal memuat dashboard', 'error'); return; }
-  const d = res.data;
+  var d = res.data;
 
-  // Quote
   if (d.quote) {
     document.getElementById('quote-text').textContent = d.quote.quote;
     document.getElementById('quote-author').textContent = '— ' + d.quote.author;
   }
 
-  // Target
   if (d.target) {
     document.getElementById('dash-target-name').textContent    = d.target.nama_target;
     document.getElementById('dash-target-nominal').textContent = rp(d.target.target_nominal);
@@ -1836,8 +2077,7 @@ async function loadDashboard() {
     document.getElementById('dash-progress-bar').style.width  = Math.min(d.target.persen, 100) + '%';
     document.getElementById('dash-kurang').textContent         = rp(d.target.kurang);
     document.getElementById('dash-prediksi').textContent       = d.target.prediksi_selesai
-      ? formatDate(d.target.prediksi_selesai)
-      : 'Belum bisa diprediksi';
+      ? formatDate(d.target.prediksi_selesai) : 'Belum bisa diprediksi';
   } else {
     document.getElementById('dash-target-name').textContent    = 'Tidak ada target aktif';
     document.getElementById('dash-target-nominal').textContent = '—';
@@ -1848,7 +2088,6 @@ async function loadDashboard() {
     document.getElementById('dash-prediksi').textContent       = '—';
   }
 
-  // Level
   if (d.level) {
     document.getElementById('dash-level-icon').textContent = d.level.icon;
     document.getElementById('dash-level-name').textContent = d.level.nama;
@@ -1859,66 +2098,49 @@ async function loadDashboard() {
     document.getElementById('sidebar-level-label').textContent = 'Lvl ' + d.level.level + ' · ' + d.level.nama;
   }
 
-  // Streak
   document.getElementById('dash-streak').textContent = d.streak || 0;
 
-  // Summary 30 days
-  const s = d.summary_30days || {};
+  var s = d.summary_30days || {};
   document.getElementById('dash-income30').textContent  = rp(s.total_income  || 0);
   document.getElementById('dash-expense30').textContent = rp(s.total_expense || 0);
   document.getElementById('dash-saving30').textContent  = rp(s.total_saving  || 0);
 
-  // Achievements
   document.getElementById('dash-ach-count').textContent = (d.unlocked_achievements || 0) + '/' + (d.total_achievements || 0);
   document.getElementById('dash-ach-sub').textContent   = 'dari ' + (d.total_achievements || 0) + ' pencapaian';
 
-  // Recent achievements
-  const achList = document.getElementById('dash-ach-list');
+  var achList = document.getElementById('dash-ach-list');
   if (d.recent_achievements && d.recent_achievements.length) {
-    achList.innerHTML = d.recent_achievements.map(a => `
-      <div style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.15);border-radius:8px;padding:0.5rem 0.9rem">
-        <span style="font-size:1.2rem">${a.icon}</span>
-        <div>
-          <div style="font-size:0.8rem;font-weight:600">${a.nama}</div>
-          <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--muted)">${formatDate(a.tanggal_unlock)}</div>
-        </div>
-      </div>
-    `).join('');
+    achList.innerHTML = d.recent_achievements.map(function(a) {
+      return '<div style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.15);border-radius:8px;padding:0.5rem 0.9rem">' +
+        '<span style="font-size:1.2rem">' + a.icon + '</span>' +
+        '<div><div style="font-size:0.8rem;font-weight:600">' + a.nama + '</div>' +
+        '<div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--muted)">' + formatDate(a.tanggal_unlock) + '</div></div></div>';
+    }).join('');
   } else {
-    achList.innerHTML = `<span style="font-size:0.85rem;color:var(--muted)">Belum ada pencapaian. Mulai nabung untuk membukanya!</span>`;
+    achList.innerHTML = '<span style="font-size:0.85rem;color:var(--muted)">Belum ada pencapaian. Mulai nabung untuk membukanya!</span>';
   }
 
-  // Chart 7 days
   buildChart7Days(d.chart_7days || []);
-
-  // Calendar 90 hari
   buildCalendar(d.saving_dates || []);
 }
 
-/**
- * Render bar chart 7 hari.
- * PERBAIKAN: Label menggunakan komponen lokal (bukan new Date(str) yang UTC).
- */
 function buildChart7Days(data) {
-  const ctx = document.getElementById('chart-7days').getContext('2d');
+  var ctx = document.getElementById('chart-7days').getContext('2d');
   if (chart7days) chart7days.destroy();
-
   Chart.defaults.color       = '#888';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
-
   chart7days = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: data.map(d => {
-        // Parse YYYY-MM-DD secara lokal untuk menghindari UTC off-by-one
-        const parts = String(d.tanggal).split('-');
-        const dt    = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      labels: data.map(function(d) {
+        var parts = String(d.tanggal).split('-');
+        var dt = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
         return dt.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' });
       }),
       datasets: [
-        { label: 'Pemasukan',   data: data.map(d => d.income),  backgroundColor: 'rgba(0,255,157,0.6)',  borderRadius: 3 },
-        { label: 'Pengeluaran', data: data.map(d => d.expense), backgroundColor: 'rgba(255,77,77,0.6)',  borderRadius: 3 },
-        { label: 'Nabung',      data: data.map(d => d.saving),  backgroundColor: 'rgba(255,214,0,0.7)',  borderRadius: 3 },
+        { label: 'Pemasukan',   data: data.map(function(d) { return d.income;  }), backgroundColor: 'rgba(0,255,157,0.6)',  borderRadius: 3 },
+        { label: 'Pengeluaran', data: data.map(function(d) { return d.expense; }), backgroundColor: 'rgba(255,77,77,0.6)',  borderRadius: 3 },
+        { label: 'Nabung',      data: data.map(function(d) { return d.saving;  }), backgroundColor: 'rgba(255,214,0,0.7)',  borderRadius: 3 },
       ],
     },
     options: {
@@ -1927,35 +2149,29 @@ function buildChart7Days(data) {
       plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } } },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { ticks: { font: { size: 10 }, callback: v => 'Rp' + (v / 1000).toFixed(0) + 'k' } },
+        y: { ticks: { font: { size: 10 }, callback: function(v) { return 'Rp' + (v / 1000).toFixed(0) + 'k'; } } },
       },
     },
   });
 }
 
-/**
- * Render kalender konsistensi 90 hari.
- * PERBAIKAN: Menggunakan komponen tanggal lokal, bukan toISOString() yang UTC.
- */
 function buildCalendar(savingDates) {
-  const savingSet = new Set(savingDates);
-  const container = document.getElementById('cal-container');
-  const DAYS      = 90;
-  const today_str = today();
-  let html = '<div class="cal-grid">';
-
-  for (let i = DAYS - 1; i >= 0; i--) {
-    const d     = new Date();
+  var savingSet = new Set(savingDates);
+  var container = document.getElementById('cal-container');
+  var DAYS      = 90;
+  var today_str = today();
+  var html = '<div class="cal-grid">';
+  for (var i = DAYS - 1; i >= 0; i--) {
+    var d     = new Date();
     d.setDate(d.getDate() - i);
-    const year  = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day   = String(d.getDate()).padStart(2, '0');
-    const s     = `${year}-${month}-${day}`;
-    const isActive = savingSet.has(s);
-    const isToday  = s === today_str;
-    html += `<div class="cal-dot ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" title="${s}"></div>`;
+    var year  = d.getFullYear();
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var day   = String(d.getDate()).padStart(2, '0');
+    var s     = year + '-' + month + '-' + day;
+    var isActive = savingSet.has(s);
+    var isToday  = s === today_str;
+    html += '<div class="cal-dot ' + (isActive ? 'active' : '') + ' ' + (isToday ? 'today' : '') + '" title="' + s + '"></div>';
   }
-
   html += '</div>';
   container.innerHTML = html;
 }
@@ -1965,16 +2181,16 @@ document.getElementById('btn-refresh-dash').addEventListener('click', loadDashbo
 // ─────────────────────────────────────────────────────────────
 // TRANSAKSI PAGE
 // ─────────────────────────────────────────────────────────────
-const txState = { offset: 0, limit: 20, total: 0, filters: {} };
+var txState = { offset: 0, limit: 20, total: 0, filters: {} };
 
 async function loadTransaksi() {
-  const { tipe, dari, sampai } = txState.filters;
-  const params = { limit: txState.limit, offset: txState.offset };
-  if (tipe)   params.tipe           = tipe;
-  if (dari)   params.tanggal_mulai  = dari;
-  if (sampai) params.tanggal_selesai = sampai;
+  var f = txState.filters;
+  var params = { limit: txState.limit, offset: txState.offset };
+  if (f.tipe)   params.tipe           = f.tipe;
+  if (f.dari)   params.tanggal_mulai  = f.dari;
+  if (f.sampai) params.tanggal_selesai = f.sampai;
 
-  const res = await api('getTransactions', params);
+  var res = await api('getTransactions', params);
   if (!res.success) { showToast(res.error, 'error'); return; }
 
   txState.total = res.data.total;
@@ -1983,48 +2199,46 @@ async function loadTransaksi() {
 }
 
 function renderTxTable(rows) {
-  const tbody = document.getElementById('tx-tbody');
+  var tbody = document.getElementById('tx-tbody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📋</div><p>Tidak ada transaksi ditemukan</p></div></td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📋</div><p>Tidak ada transaksi ditemukan</p></div></td></tr>';
     return;
   }
-  tbody.innerHTML = rows.map(r => `
-    <tr>
-      <td style="white-space:nowrap;font-family:var(--font-mono);font-size:0.78rem">${formatDate(r.tanggal)}</td>
-      <td>${txBadge(r.tipe)}</td>
-      <td>${r.kategori}</td>
-      <td style="font-family:var(--font-num);font-size:1.1rem;color:${txColor(r.tipe)};white-space:nowrap">${txSign(r.tipe)}${rp(r.nominal)}</td>
-      <td style="color:var(--muted);font-size:0.8rem">${r.keterangan || '—'}</td>
-      <td style="white-space:nowrap">
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditTx('${r.id}')" title="Edit" data-tx-id="${r.id}">✏</button>
-        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteTx('${r.id}')" title="Hapus" style="margin-left:0.25rem">🗑</button>
-      </td>
-    </tr>
-  `).join('');
-
+  tbody.innerHTML = rows.map(function(r) {
+    return '<tr>' +
+      '<td style="white-space:nowrap;font-family:var(--font-mono);font-size:0.78rem">' + formatDate(r.tanggal) + '</td>' +
+      '<td>' + txBadge(r.tipe) + '</td>' +
+      '<td>' + r.kategori + '</td>' +
+      '<td style="font-family:var(--font-num);font-size:1.1rem;color:' + txColor(r.tipe) + ';white-space:nowrap">' + txSign(r.tipe) + rp(r.nominal) + '</td>' +
+      '<td style="color:var(--muted);font-size:0.8rem">' + (r.keterangan || '—') + '</td>' +
+      '<td style="white-space:nowrap">' +
+        '<button class="btn btn-ghost btn-sm btn-icon" onclick="openEditTx(\'' + r.id + '\')" title="Edit">✏</button>' +
+        '<button class="btn btn-danger btn-sm btn-icon" onclick="deleteTx(\'' + r.id + '\')" title="Hapus" style="margin-left:0.25rem">🗑</button>' +
+      '</td></tr>';
+  }).join('');
   window._txRows = rows;
 }
 
 function renderTxPagination() {
-  const from = txState.offset + 1;
-  const to   = Math.min(txState.offset + txState.limit, txState.total);
-  document.getElementById('tx-pagination-info').textContent    = txState.total ? `${from}–${to} dari ${txState.total} transaksi` : 'Tidak ada data';
+  var from = txState.offset + 1;
+  var to   = Math.min(txState.offset + txState.limit, txState.total);
+  document.getElementById('tx-pagination-info').textContent    = txState.total ? (from + '–' + to + ' dari ' + txState.total + ' transaksi') : 'Tidak ada data';
   document.getElementById('btn-tx-prev').disabled = txState.offset === 0;
   document.getElementById('btn-tx-next').disabled = txState.offset + txState.limit >= txState.total;
 }
 
-document.getElementById('btn-tx-prev').addEventListener('click', () => {
+document.getElementById('btn-tx-prev').addEventListener('click', function() {
   if (txState.offset === 0) return;
   txState.offset = Math.max(0, txState.offset - txState.limit);
   loadTransaksi();
 });
-document.getElementById('btn-tx-next').addEventListener('click', () => {
+document.getElementById('btn-tx-next').addEventListener('click', function() {
   if (txState.offset + txState.limit >= txState.total) return;
   txState.offset += txState.limit;
   loadTransaksi();
 });
 
-document.getElementById('btn-filter-tx').addEventListener('click', () => {
+document.getElementById('btn-filter-tx').addEventListener('click', function() {
   txState.filters = {
     tipe:   document.getElementById('filter-tipe').value,
     dari:   document.getElementById('filter-dari').value,
@@ -2034,7 +2248,7 @@ document.getElementById('btn-filter-tx').addEventListener('click', () => {
   loadTransaksi();
 });
 
-document.getElementById('btn-reset-filter').addEventListener('click', () => {
+document.getElementById('btn-reset-filter').addEventListener('click', function() {
   document.getElementById('filter-tipe').value   = '';
   document.getElementById('filter-dari').value   = '';
   document.getElementById('filter-sampai').value = '';
@@ -2043,8 +2257,7 @@ document.getElementById('btn-reset-filter').addEventListener('click', () => {
   loadTransaksi();
 });
 
-// Tambah Transaksi (INCOME/EXPENSE)
-document.getElementById('btn-add-tx').addEventListener('click', () => {
+document.getElementById('btn-add-tx').addEventListener('click', function() {
   document.getElementById('tx-edit-id').value          = '';
   document.getElementById('modal-tx-title').textContent = 'Tambah Transaksi';
   document.getElementById('tx-tipe').value             = 'INCOME';
@@ -2056,9 +2269,8 @@ document.getElementById('btn-add-tx').addEventListener('click', () => {
 });
 
 function openEditTx(id) {
-  const row = (window._txRows || []).find(r => String(r.id) === String(id));
+  var row = (window._txRows || []).find(function(r) { return String(r.id) === String(id); });
   if (!row) { showToast('Data tidak ditemukan', 'error'); return; }
-
   document.getElementById('tx-edit-id').value          = row.id;
   document.getElementById('modal-tx-title').textContent = 'Edit Transaksi';
   document.getElementById('tx-tipe').value             = row.tipe;
@@ -2069,25 +2281,25 @@ function openEditTx(id) {
   openModal('modal-tx');
 }
 
-document.getElementById('btn-save-tx').addEventListener('click', async () => {
-  const id       = document.getElementById('tx-edit-id').value;
-  const tipe     = document.getElementById('tx-tipe').value;
-  const tanggal  = document.getElementById('tx-tanggal').value;
-  const kategori = document.getElementById('tx-kategori').value.trim();
-  const nominal  = document.getElementById('tx-nominal').value;
-  const ket      = document.getElementById('tx-keterangan').value.trim();
+document.getElementById('btn-save-tx').addEventListener('click', async function() {
+  var id       = document.getElementById('tx-edit-id').value;
+  var tipe     = document.getElementById('tx-tipe').value;
+  var tanggal  = document.getElementById('tx-tanggal').value;
+  var kategori = document.getElementById('tx-kategori').value.trim();
+  var nominal  = document.getElementById('tx-nominal').value;
+  var ket      = document.getElementById('tx-keterangan').value.trim();
 
   if (!tanggal || !kategori || !nominal) { showToast('Semua kolom wajib diisi', 'error'); return; }
   if (Number(nominal) <= 0) { showToast('Nominal harus lebih dari 0', 'error'); return; }
 
-  const btn = document.getElementById('btn-save-tx');
+  var btn = document.getElementById('btn-save-tx');
   btn.disabled = true;
 
-  let res;
+  var res;
   if (id) {
-    res = await api('editTransaction', { id, tipe, tanggal, kategori, nominal: Number(nominal), keterangan: ket });
+    res = await api('editTransaction', { id: id, tipe: tipe, tanggal: tanggal, kategori: kategori, nominal: Number(nominal), keterangan: ket });
   } else {
-    res = await api('addTransaction', { tipe, tanggal, kategori, nominal: Number(nominal), keterangan: ket });
+    res = await api('addTransaction', { tipe: tipe, tanggal: tanggal, kategori: kategori, nominal: Number(nominal), keterangan: ket });
   }
 
   btn.disabled = false;
@@ -2104,8 +2316,8 @@ document.getElementById('btn-save-tx').addEventListener('click', async () => {
 });
 
 async function deleteTx(id) {
-  openConfirm('Hapus Transaksi', 'Yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.', async () => {
-    const res = await api('deleteTransaction', { id });
+  openConfirm('Hapus Transaksi', 'Yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.', async function() {
+    var res = await api('deleteTransaction', { id: id });
     if (res.success) {
       showToast('Transaksi berhasil dihapus', 'success');
       loadTransaksi();
@@ -2122,40 +2334,33 @@ async function loadNabungPage() {
   document.getElementById('nabung-tanggal').value = today();
   document.getElementById('tarik-tanggal').value  = today();
 
-  const res = await api('getTarget');
-  const el  = document.getElementById('nabung-target-info');
+  var res = await api('getTarget');
+  var el  = document.getElementById('nabung-target-info');
   if (res.success && res.data) {
-    const t = res.data;
-    el.innerHTML = `
-      <div class="flex-between mb-1">
-        <span style="font-family:var(--font-title);font-size:1rem;font-weight:700;color:var(--primary)">${t.nama_target}</span>
-        <span style="font-family:var(--font-num);font-size:1.5rem;color:var(--text)">${t.persen.toFixed(1)}%</span>
-      </div>
-      <div class="progress-wrap mb-1">
-        <div class="progress-bar yellow" style="width:${Math.min(t.persen, 100)}%"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted)">
-        <span>Terkumpul: <span style="color:var(--primary)">${rp(t.total_saving)}</span></span>
-        <span>Target: <span style="color:var(--text)">${rp(t.target_nominal)}</span></span>
-      </div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-top:0.25rem">Kurang: <span style="color:var(--danger)">${rp(t.kurang)}</span></div>
-    `;
+    var t = res.data;
+    el.innerHTML =
+      '<div class="flex-between mb-1">' +
+        '<span style="font-family:var(--font-title);font-size:1rem;font-weight:700;color:var(--primary)">' + t.nama_target + '</span>' +
+        '<span style="font-family:var(--font-num);font-size:1.5rem;color:var(--text)">' + t.persen.toFixed(1) + '%</span>' +
+      '</div>' +
+      '<div class="progress-wrap mb-1"><div class="progress-bar yellow" style="width:' + Math.min(t.persen, 100) + '%"></div></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted)">' +
+        '<span>Terkumpul: <span style="color:var(--primary)">' + rp(t.total_saving) + '</span></span>' +
+        '<span>Target: <span style="color:var(--text)">' + rp(t.target_nominal) + '</span></span>' +
+      '</div>' +
+      '<div style="font-size:0.78rem;color:var(--muted);margin-top:0.25rem">Kurang: <span style="color:var(--danger)">' + rp(t.kurang) + '</span></div>';
   } else {
-    el.innerHTML = `<span style="color:var(--muted)">Tidak ada target aktif. Buat target terlebih dahulu.</span>`;
+    el.innerHTML = '<span style="color:var(--muted)">Tidak ada target aktif. Buat target terlebih dahulu.</span>';
   }
 }
 
-/**
- * Submit nabung atau tarik.
- * PERBAIKAN: Tombol di-disable selama request berlangsung untuk mencegah double-submit.
- */
 async function doSaving(isSaving) {
-  const prefix   = isSaving ? 'nabung' : 'tarik';
-  const nominal  = document.getElementById(`${prefix}-nominal`).value;
-  const tanggal  = document.getElementById(`${prefix}-tanggal`).value;
-  const kategori = document.getElementById(`${prefix}-kategori`).value.trim();
-  const ket      = document.getElementById(`${prefix}-ket`).value.trim();
-  const btn      = document.getElementById(`btn-${prefix}`);
+  var prefix   = isSaving ? 'nabung' : 'tarik';
+  var nominal  = document.getElementById(prefix + '-nominal').value;
+  var tanggal  = document.getElementById(prefix + '-tanggal').value;
+  var kategori = document.getElementById(prefix + '-kategori').value.trim();
+  var ket      = document.getElementById(prefix + '-ket').value.trim();
+  var btn      = document.getElementById('btn-' + prefix);
 
   if (!nominal || !tanggal || !kategori) {
     showToast('Nominal, tanggal, dan kategori wajib diisi', 'error');
@@ -2168,22 +2373,18 @@ async function doSaving(isSaving) {
 
   btn.disabled = true;
 
-  const targetRes = await api('getTarget');
+  var targetRes = await api('getTarget');
   if (!targetRes.success || !targetRes.data) {
     showToast('Tidak ada target aktif. Buat target terlebih dahulu.', 'error');
     btn.disabled = false;
     return;
   }
-  const targetId = targetRes.data.id;
+  var targetId = targetRes.data.id;
 
-  const tipe = isSaving ? 'SAVING' : 'WITHDRAWAL';
-  const res  = await api('addTransaction', {
-    tipe,
-    tanggal,
-    kategori,
-    nominal:    Number(nominal),
-    keterangan: ket,
-    target_id:  String(targetId),
+  var tipe = isSaving ? 'SAVING' : 'WITHDRAWAL';
+  var res  = await api('addTransaction', {
+    tipe: tipe, tanggal: tanggal, kategori: kategori,
+    nominal: Number(nominal), keterangan: ket, target_id: String(targetId),
   }, true);
 
   btn.disabled = false;
@@ -2191,27 +2392,27 @@ async function doSaving(isSaving) {
   if (res.success) {
     showToast(isSaving ? 'Tabungan berhasil disimpan! 💰' : 'Penarikan berhasil dicatat.', 'success');
     if (res.data && res.data.new_achievements) showAchievementToasts(res.data.new_achievements);
-    document.getElementById(`${prefix}-nominal`).value  = '';
-    document.getElementById(`${prefix}-kategori`).value = '';
-    document.getElementById(`${prefix}-ket`).value      = '';
+    document.getElementById(prefix + '-nominal').value  = '';
+    document.getElementById(prefix + '-kategori').value = '';
+    document.getElementById(prefix + '-ket').value      = '';
     loadNabungPage();
   } else {
     showToast(res.error || 'Gagal menyimpan', 'error');
   }
 }
 
-document.getElementById('btn-nabung').addEventListener('click', () => doSaving(true));
-document.getElementById('btn-tarik').addEventListener('click',  () => doSaving(false));
+document.getElementById('btn-nabung').addEventListener('click', function() { doSaving(true);  });
+document.getElementById('btn-tarik').addEventListener('click',  function() { doSaving(false); });
 
 // ─────────────────────────────────────────────────────────────
 // TARGET PAGE
 // ─────────────────────────────────────────────────────────────
-let _currentTarget = null;
+var _currentTarget = null;
 
 async function loadTargetPage() {
-  const res     = await api('getTarget');
-  const section = document.getElementById('target-active-section');
-  const noTarget = document.getElementById('target-no-target');
+  var res     = await api('getTarget');
+  var section = document.getElementById('target-active-section');
+  var noTarget = document.getElementById('target-no-target');
 
   if (!res.success || !res.data) {
     section.innerHTML = '';
@@ -2222,50 +2423,36 @@ async function loadTargetPage() {
 
   noTarget.style.display = 'none';
   _currentTarget = res.data;
-  const t = res.data;
+  var t = res.data;
 
-  section.innerHTML = `
-    <div class="target-card mb-3">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">
-        <div>
-          <div class="card-title">Target Aktif</div>
-          <div class="target-name">${t.nama_target}</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" id="btn-edit-target">✏ Edit Target</button>
-      </div>
-      <div class="target-nominal">${rp(t.target_nominal)}</div>
-      <div class="target-progress-label">
-        <span style="font-size:0.85rem;color:var(--muted)">Terkumpul: <strong style="color:var(--text)">${rp(t.total_saving)}</strong></span>
-        <span class="target-persen">${t.persen.toFixed(1)}%</span>
-      </div>
-      <div class="progress-wrap mb-2">
-        <div class="progress-bar yellow" style="width:${Math.min(t.persen, 100)}%"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem">
-        <div class="stat-card c-red" style="padding:0.875rem">
-          <div class="stat-label">Masih Kurang</div>
-          <div class="stat-value red" style="font-size:1.5rem">${rp(t.kurang)}</div>
-        </div>
-        <div class="stat-card c-cyan" style="padding:0.875rem">
-          <div class="stat-label">Mulai Nabung</div>
-          <div class="stat-value cyan" style="font-size:1.5rem">${formatDate(t.tanggal_mulai)}</div>
-        </div>
-      </div>
-      ${t.persen >= 100 ? `
-        <div style="margin-top:1rem;padding:1rem;background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.2);border-radius:8px;text-align:center">
-          <div style="font-size:1.5rem;margin-bottom:0.5rem">🎉</div>
-          <div style="font-family:var(--font-title);color:var(--success);font-weight:700">TARGET TERCAPAI!</div>
-          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem">Selamat! Kamu berhasil mencapai target. Tandai sebagai selesai!</p>
-          <button class="btn btn-success mt-2" id="btn-complete-target">🏆 Tandai Selesai</button>
-        </div>
-      ` : ''}
-    </div>
-    <div class="gap-row">
-      ${t.persen < 100 ? `<button class="btn btn-secondary" id="btn-nabung-now">💰 Nabung Sekarang</button>` : ''}
-    </div>
-  `;
+  section.innerHTML =
+    '<div class="target-card mb-3">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">' +
+        '<div><div class="card-title">Target Aktif</div><div class="target-name">' + t.nama_target + '</div></div>' +
+        '<button class="btn btn-ghost btn-sm" id="btn-edit-target">✏ Edit Target</button>' +
+      '</div>' +
+      '<div class="target-nominal">' + rp(t.target_nominal) + '</div>' +
+      '<div class="target-progress-label">' +
+        '<span style="font-size:0.85rem;color:var(--muted)">Terkumpul: <strong style="color:var(--text)">' + rp(t.total_saving) + '</strong></span>' +
+        '<span class="target-persen">' + t.persen.toFixed(1) + '%</span>' +
+      '</div>' +
+      '<div class="progress-wrap mb-2"><div class="progress-bar yellow" style="width:' + Math.min(t.persen, 100) + '%"></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem">' +
+        '<div class="stat-card c-red" style="padding:0.875rem"><div class="stat-label">Masih Kurang</div><div class="stat-value red" style="font-size:1.5rem">' + rp(t.kurang) + '</div></div>' +
+        '<div class="stat-card c-cyan" style="padding:0.875rem"><div class="stat-label">Mulai Nabung</div><div class="stat-value cyan" style="font-size:1.5rem">' + formatDate(t.tanggal_mulai) + '</div></div>' +
+      '</div>' +
+      (t.persen >= 100 ? '<div style="margin-top:1rem;padding:1rem;background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.2);border-radius:8px;text-align:center">' +
+        '<div style="font-size:1.5rem;margin-bottom:0.5rem">🎉</div>' +
+        '<div style="font-family:var(--font-title);color:var(--success);font-weight:700">TARGET TERCAPAI!</div>' +
+        '<p style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem">Selamat! Kamu berhasil mencapai target. Tandai sebagai selesai!</p>' +
+        '<button class="btn btn-success mt-2" id="btn-complete-target">🏆 Tandai Selesai</button>' +
+        '</div>' : '') +
+    '</div>' +
+    '<div class="gap-row">' +
+      (t.persen < 100 ? '<button class="btn btn-secondary" id="btn-nabung-now">💰 Nabung Sekarang</button>' : '') +
+    '</div>';
 
-  document.getElementById('btn-edit-target')?.addEventListener('click', () => {
+  document.getElementById('btn-edit-target') && document.getElementById('btn-edit-target').addEventListener('click', function() {
     document.getElementById('modal-target-title').textContent = 'Edit Target';
     document.getElementById('target-nama').value              = t.nama_target;
     document.getElementById('target-nominal-input').value     = t.target_nominal;
@@ -2273,26 +2460,24 @@ async function loadTargetPage() {
     openModal('modal-target');
   });
 
-  document.getElementById('btn-complete-target')?.addEventListener('click', () => {
-    openConfirm(
-      'Tandai Target Selesai',
-      `Kamu akan menandai target "${t.nama_target}" sebagai SELESAI dan menyimpannya ke Papan Prestasi. Lanjutkan?`,
-      async () => {
-        const res2 = await api('completeTarget', {}, true);
+  document.getElementById('btn-complete-target') && document.getElementById('btn-complete-target').addEventListener('click', function() {
+    openConfirm('Tandai Target Selesai',
+      'Kamu akan menandai target "' + t.nama_target + '" sebagai SELESAI dan menyimpannya ke Papan Prestasi. Lanjutkan?',
+      async function() {
+        var res2 = await api('completeTarget', {}, true);
         if (res2.success) {
           showToast('Selamat! 🎉 Target berhasil diselesaikan!', 'success');
           loadTargetPage();
         } else {
           showToast(res2.error || 'Gagal', 'error');
         }
-      }
-    );
+      });
   });
 
-  document.getElementById('btn-nabung-now')?.addEventListener('click', () => goTo('nabung'));
+  document.getElementById('btn-nabung-now') && document.getElementById('btn-nabung-now').addEventListener('click', function() { goTo('nabung'); });
 }
 
-document.addEventListener('click', e => {
+document.addEventListener('click', function(e) {
   if (e.target.id === 'btn-buat-target-empty') {
     document.getElementById('modal-target-title').textContent = 'Buat Target Baru';
     document.getElementById('target-nama').value              = '';
@@ -2302,18 +2487,18 @@ document.addEventListener('click', e => {
   }
 });
 
-document.getElementById('btn-save-target').addEventListener('click', async () => {
-  const nama    = document.getElementById('target-nama').value.trim();
-  const nominal = document.getElementById('target-nominal-input').value;
-  const mode    = document.getElementById('btn-save-target').dataset.mode || 'create';
+document.getElementById('btn-save-target').addEventListener('click', async function() {
+  var nama    = document.getElementById('target-nama').value.trim();
+  var nominal = document.getElementById('target-nominal-input').value;
+  var mode    = document.getElementById('btn-save-target').dataset.mode || 'create';
 
   if (!nama || !nominal) { showToast('Nama target dan nominal wajib diisi', 'error'); return; }
   if (Number(nominal) <= 0) { showToast('Nominal harus lebih dari 0', 'error'); return; }
 
-  const btn = document.getElementById('btn-save-target');
+  var btn = document.getElementById('btn-save-target');
   btn.disabled = true;
 
-  let res;
+  var res;
   if (mode === 'edit') {
     res = await api('updateTarget', { nama_target: nama, target_nominal: Number(nominal) });
   } else {
@@ -2335,113 +2520,454 @@ document.getElementById('btn-save-target').addEventListener('click', async () =>
 // HALL OF FAME
 // ─────────────────────────────────────────────────────────────
 async function loadHallOfFame() {
-  const res = await api('getHallOfFame');
-  const container = document.getElementById('hof-list');
+  var res = await api('getHallOfFame');
+  var container = document.getElementById('hof-list');
   if (!res.success) { showToast(res.error, 'error'); return; }
 
-  const list = res.data.hall_of_fame || [];
+  var list = res.data.hall_of_fame || [];
   if (!list.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🏆</div><p>Belum ada target yang diselesaikan. Ayo semangat menabung!</p></div>`;
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🏆</div><p>Belum ada target yang diselesaikan. Ayo semangat menabung!</p></div>';
     return;
   }
 
-  container.innerHTML = list.map((hof, i) => `
-    <div class="hof-card mb-2">
-      <div class="hof-rank ${i === 0 ? 'top1' : ''}">${i + 1}</div>
-      <div class="hof-info">
-        <div class="hof-name">${hof.nama_target}</div>
-        <div class="hof-meta">
-          ${formatDate(hof.tanggal_mulai)} → ${formatDate(hof.tanggal_selesai)}
-          &nbsp;·&nbsp; ${hof.total_hari} hari
-          &nbsp;·&nbsp; ${hof.total_saving_tx} kali nabung
-        </div>
-      </div>
-      <div class="hof-nominal">${rp(hof.target_nominal)}</div>
-    </div>
-  `).join('');
+  container.innerHTML = list.map(function(hof, i) {
+    return '<div class="hof-card mb-2">' +
+      '<div class="hof-rank ' + (i === 0 ? 'top1' : '') + '">' + (i + 1) + '</div>' +
+      '<div class="hof-info">' +
+        '<div class="hof-name">' + hof.nama_target + '</div>' +
+        '<div class="hof-meta">' + formatDate(hof.tanggal_mulai) + ' → ' + formatDate(hof.tanggal_selesai) +
+          ' &nbsp;·&nbsp; ' + hof.total_hari + ' hari &nbsp;·&nbsp; ' + hof.total_saving_tx + ' kali nabung</div>' +
+      '</div>' +
+      '<div class="hof-nominal">' + rp(hof.target_nominal) + '</div>' +
+    '</div>';
+  }).join('');
 }
 
 // ─────────────────────────────────────────────────────────────
 // PENCAPAIAN
 // ─────────────────────────────────────────────────────────────
 async function loadPencapaian() {
-  const res = await api('getAchievements');
+  var res = await api('getAchievements');
   if (!res.success) { showToast(res.error, 'error'); return; }
 
-  const { achievements, total, total_unlocked } = res.data;
+  var achievements = res.data.achievements;
+  var total        = res.data.total;
+  var totalUnlocked = res.data.total_unlocked;
 
-  document.getElementById('ach-count-display').textContent   = `${total_unlocked}/${total}`;
-  document.getElementById('ach-subtitle').textContent        = `${total_unlocked} dari ${total} pencapaian terbuka`;
-  document.getElementById('ach-main-progress').style.width   = total > 0 ? ((total_unlocked / total) * 100) + '%' : '0%';
+  document.getElementById('ach-count-display').textContent   = totalUnlocked + '/' + total;
+  document.getElementById('ach-subtitle').textContent        = totalUnlocked + ' dari ' + total + ' pencapaian terbuka';
+  document.getElementById('ach-main-progress').style.width   = total > 0 ? ((totalUnlocked / total) * 100) + '%' : '0%';
 
-  const sorted = [...achievements].sort((a, b) => {
-    if (a.is_unlocked && !b.is_unlocked)  return -1;
-    if (!a.is_unlocked && b.is_unlocked)  return  1;
+  var sorted = achievements.slice().sort(function(a, b) {
+    if (a.is_unlocked && !b.is_unlocked) return -1;
+    if (!a.is_unlocked && b.is_unlocked) return  1;
     return 0;
   });
 
-  document.getElementById('ach-grid').innerHTML = sorted.map(a => `
-    <div class="ach-card ${a.is_unlocked ? 'unlocked' : 'locked'}">
-      ${!a.is_unlocked ? `<div class="ach-lock">🔒</div>` : ''}
-      <div class="ach-icon">${a.icon}</div>
-      <div class="ach-name">${a.nama}</div>
-      <div class="ach-desc">${a.deskripsi}</div>
-      ${a.is_unlocked && a.tanggal_unlock ? `<div class="ach-date">Dibuka: ${formatDate(a.tanggal_unlock)}</div>` : ''}
-    </div>
-  `).join('');
+  document.getElementById('ach-grid').innerHTML = sorted.map(function(a) {
+    return '<div class="ach-card ' + (a.is_unlocked ? 'unlocked' : 'locked') + '">' +
+      (!a.is_unlocked ? '<div class="ach-lock">🔒</div>' : '') +
+      '<div class="ach-icon">' + a.icon + '</div>' +
+      '<div class="ach-name">' + a.nama + '</div>' +
+      '<div class="ach-desc">' + a.deskripsi + '</div>' +
+      (a.is_unlocked && a.tanggal_unlock ? '<div class="ach-date">Dibuka: ' + formatDate(a.tanggal_unlock) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// STATISTIK BULANAN
+// ─────────────────────────────────────────────────────────────
+var chartExpensePie  = null;
+var chartStatDaily   = null;
+var chartTrend       = null;
+var _statData        = null;
+var _statKatTipe     = 'EXPENSE';
+var _trendMonths     = 6;
+
+function initStatFilters() {
+  var now = getNowMonthYear();
+  document.getElementById('stat-filter-bulan').value = now.month;
+  document.getElementById('stat-filter-tahun').value  = now.year;
+}
+
+async function loadStatistik() {
+  initStatFilters();
+  await fetchAndRenderStat();
+  await fetchAndRenderTrend(_trendMonths);
+}
+
+async function fetchAndRenderStat() {
+  var bulan = Number(document.getElementById('stat-filter-bulan').value);
+  var tahun = Number(document.getElementById('stat-filter-tahun').value);
+
+  if (!bulan || !tahun || tahun < 2000 || tahun > 2100) {
+    showToast('Filter bulan/tahun tidak valid', 'error');
+    return;
+  }
+
+  var res = await api('getMonthlyStat', { bulan: bulan, tahun: tahun }, true);
+  if (!res.success) { showToast(res.error || 'Gagal memuat statistik', 'error'); return; }
+
+  _statData = res.data;
+  renderStatSummary(res.data);
+  renderPieChart(res.data);
+  renderStatDailyChart(res.data);
+  renderKatList(_statKatTipe);
+}
+
+function renderStatSummary(data) {
+  var s = data.summary;
+  document.getElementById('stat-income').textContent      = rp(s.total_income);
+  document.getElementById('stat-expense').textContent     = rp(s.total_expense);
+  document.getElementById('stat-saving').textContent      = rp(s.total_saving);
+  document.getElementById('stat-saldo').textContent       = rp(s.saldo_bersih);
+  document.getElementById('stat-jumlah-tx').textContent   = s.jumlah_tx;
+
+  var netSavingEl = document.getElementById('stat-net-saving');
+  netSavingEl.textContent = rp(s.net_saving);
+  netSavingEl.style.color = s.net_saving >= 0 ? 'var(--primary)' : 'var(--danger)';
+
+  var saldoEl = document.getElementById('stat-saldo');
+  saldoEl.style.color = s.saldo_bersih >= 0 ? 'var(--secondary)' : 'var(--danger)';
+}
+
+function renderPieChart(data) {
+  var pieWrap  = document.getElementById('stat-pie-wrap');
+  var pieEmpty = document.getElementById('stat-pie-empty');
+  var pieLegend = document.getElementById('stat-pie-legend');
+  var ctx      = document.getElementById('chart-expense-pie').getContext('2d');
+
+  var expenseData = (data.by_category && data.by_category.EXPENSE) ? data.by_category.EXPENSE : [];
+
+  if (chartExpensePie) { chartExpensePie.destroy(); chartExpensePie = null; }
+
+  if (!expenseData.length) {
+    pieWrap.style.display  = 'none';
+    pieEmpty.style.display = 'block';
+    pieLegend.innerHTML    = '';
+    return;
+  }
+
+  pieWrap.style.display  = 'flex';
+  pieEmpty.style.display = 'none';
+
+  var PALETTE = ['#FFD600','#00E5FF','#00FF9D','#FF4D4D','#a855f7','#f97316','#ec4899','#3b82f6','#10b981','#f59e0b'];
+  var labels  = expenseData.map(function(e) { return e.kategori; });
+  var values  = expenseData.map(function(e) { return e.total; });
+  var colors  = expenseData.map(function(_, i) { return PALETTE[i % PALETTE.length]; });
+
+  chartExpensePie = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels: labels, datasets: [{ data: values, backgroundColor: colors, borderColor: '#111', borderWidth: 2, hoverOffset: 6 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var pct = expenseData[ctx.dataIndex].persentase;
+              return ' ' + ctx.label + ': ' + rp(ctx.raw) + ' (' + pct + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  pieLegend.innerHTML = expenseData.map(function(e, i) {
+    return '<div class="kat-bar-row">' +
+      '<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' + colors[i] + ';flex-shrink:0"></span>' +
+      '<span class="kat-bar-label">' + e.kategori + '</span>' +
+      '<div class="kat-bar-wrap"><div class="kat-bar-fill" style="width:' + e.persentase + '%;background:' + colors[i] + '"></div></div>' +
+      '<span class="kat-bar-pct">' + e.persentase + '%</span>' +
+    '</div>';
+  }).join('');
+}
+
+function renderStatDailyChart(data) {
+  var ctx = document.getElementById('chart-stat-daily').getContext('2d');
+  if (chartStatDaily) { chartStatDaily.destroy(); chartStatDaily = null; }
+
+  var daily = (data.daily_data || []);
+
+  if (!daily.length) {
+    chartStatDaily = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: [], datasets: [] },
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { display: false }, y: { display: false } }
+      }
+    });
+    return;
+  }
+
+  chartStatDaily = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: daily.map(function(d) {
+        var parts = String(d.tanggal).split('-');
+        return parts[2];
+      }),
+      datasets: [
+        { label: 'Pemasukan',   data: daily.map(function(d) { return d.income;   }), backgroundColor: 'rgba(0,255,157,0.55)',  borderRadius: 2, stack: 'a' },
+        { label: 'Pengeluaran', data: daily.map(function(d) { return d.expense;  }), backgroundColor: 'rgba(255,77,77,0.55)',  borderRadius: 2, stack: 'b' },
+        { label: 'Nabung',      data: daily.map(function(d) { return d.saving;   }), backgroundColor: 'rgba(255,214,0,0.65)',  borderRadius: 2, stack: 'c' },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 10 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+        y: { ticks: { font: { size: 9 }, callback: function(v) { return 'Rp' + (v/1000).toFixed(0) + 'k'; } } },
+      },
+    }
+  });
+}
+
+function renderKatList(tipe) {
+  _statKatTipe = tipe;
+  var el = document.getElementById('stat-kat-list');
+  if (!_statData) { el.innerHTML = '<div class="empty-state" style="padding:1.5rem"><p>Tidak ada data</p></div>'; return; }
+
+  var cats = (_statData.by_category && _statData.by_category[tipe]) ? _statData.by_category[tipe] : [];
+
+  if (!cats.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:1.5rem"><p>Tidak ada data pada periode ini.</p></div>';
+    return;
+  }
+
+  var COLORS = { INCOME: 'var(--success)', EXPENSE: 'var(--danger)', SAVING: 'var(--primary)', WITHDRAWAL: 'var(--secondary)' };
+  var color  = COLORS[tipe] || 'var(--primary)';
+
+  el.innerHTML = cats.map(function(c) {
+    return '<div class="kat-bar-row">' +
+      '<span class="kat-bar-label">' + c.kategori + '</span>' +
+      '<div class="kat-bar-wrap"><div class="kat-bar-fill" style="width:' + c.persentase + '%;background:' + color + '"></div></div>' +
+      '<span style="font-family:var(--font-num);font-size:1rem;min-width:90px;text-align:right">' + rp(c.total) + '</span>' +
+      '<span class="kat-bar-pct">' + c.persentase + '%</span>' +
+      '<span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);min-width:30px">' + c.jumlah_tx + 'x</span>' +
+    '</div>';
+  }).join('');
+}
+
+async function fetchAndRenderTrend(months) {
+  _trendMonths = months;
+  var res = await api('getMonthlyTrend', { months: months });
+  if (!res.success) { showToast(res.error || 'Gagal memuat tren', 'error'); return; }
+  renderTrendChart(res.data.trend || []);
+}
+
+function renderTrendChart(trend) {
+  var ctx = document.getElementById('chart-trend').getContext('2d');
+  if (chartTrend) { chartTrend.destroy(); chartTrend = null; }
+
+  var MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+
+  chartTrend = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: trend.map(function(t) { return MONTH_NAMES[t.bulan - 1] + ' ' + t.tahun; }),
+      datasets: [
+        { label: 'Pemasukan',   data: trend.map(function(t) { return t.income;  }), backgroundColor: 'rgba(0,255,157,0.55)', borderRadius: 4 },
+        { label: 'Pengeluaran', data: trend.map(function(t) { return t.expense; }), backgroundColor: 'rgba(255,77,77,0.55)', borderRadius: 4 },
+        { label: 'Nabung',      data: trend.map(function(t) { return t.saving;  }), backgroundColor: 'rgba(255,214,0,0.65)', borderRadius: 4 },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 }, callback: function(v) { return 'Rp' + (v/1000).toFixed(0) + 'k'; } } },
+      },
+    }
+  });
+}
+
+// Stat filter apply
+document.getElementById('btn-stat-apply').addEventListener('click', fetchAndRenderStat);
+
+// Kategori tabs
+document.getElementById('stat-kat-tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('#stat-kat-tabs .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderKatList(btn.dataset.tipe);
+});
+
+// Trend tabs
+document.getElementById('trend-tab-group').addEventListener('click', async function(e) {
+  var btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('#trend-tab-group .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  await fetchAndRenderTrend(Number(btn.dataset.months));
+});
+
+// ─────────────────────────────────────────────────────────────
+// SIMULATOR
+// ─────────────────────────────────────────────────────────────
+document.getElementById('btn-sim-hitung').addEventListener('click', async function() {
+  var errEl   = document.getElementById('sim-error');
+  errEl.style.display = 'none';
+
+  var targetVal  = document.getElementById('sim-target').value.trim();
+  var currentVal = document.getElementById('sim-current').value.trim();
+  var amountVal  = document.getElementById('sim-amount').value.trim();
+  var freq       = document.getElementById('sim-freq').value;
+
+  // Validasi
+  if (!targetVal || !amountVal) {
+    errEl.textContent = 'Target nominal dan nominal menabung wajib diisi.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var targetNum  = Number(targetVal);
+  var currentNum = currentVal === '' ? 0 : Number(currentVal);
+  var amountNum  = Number(amountVal);
+
+  if (isNaN(targetNum) || targetNum <= 0) {
+    errEl.textContent = 'Target nominal harus berupa angka lebih dari 0.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (isNaN(currentNum) || currentNum < 0) {
+    errEl.textContent = 'Tabungan saat ini harus berupa angka ≥ 0.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (isNaN(amountNum) || amountNum <= 0) {
+    errEl.textContent = 'Nominal menabung harus berupa angka lebih dari 0.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (currentNum >= targetNum) {
+    errEl.textContent = 'Tabungan saat ini sudah ≥ target. Target sudah tercapai!';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.getElementById('btn-sim-hitung');
+  btn.disabled = true;
+
+  var res = await api('simulateTarget', {
+    target_nominal: targetNum,
+    current_saving: currentNum,
+    amount:         amountNum,
+    frequency:      freq,
+  }, true);
+
+  btn.disabled = false;
+
+  if (!res.success) {
+    errEl.textContent = res.error || 'Gagal menghitung simulasi.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  renderSimResult(res.data);
+});
+
+function renderSimResult(data) {
+  var FREQ_LABEL = { daily: 'hari', weekly: 'minggu', monthly: 'bulan' };
+  var freqLabel  = FREQ_LABEL[data.input.frequency] || data.input.frequency;
+
+  var html =
+    '<div class="sim-result-card mb-3">' +
+      '<div class="card-title" style="margin-bottom:1rem">📊 Hasil Estimasi</div>' +
+      '<div class="grid-2 mb-2">' +
+        '<div><div class="stat-label">Sisa yang Harus Ditabung</div>' +
+          '<div style="font-family:var(--font-num);font-size:1.8rem;color:var(--danger)">' + rp(data.sisa_nominal) + '</div></div>' +
+        '<div><div class="stat-label">Estimasi Selesai</div>' +
+          '<div style="font-family:var(--font-num);font-size:1.8rem;color:var(--success)">' + formatDate(data.estimasi_selesai) + '</div></div>' +
+      '</div>' +
+      '<div class="grid-3">' +
+        '<div class="stat-card c-yellow" style="padding:0.875rem"><div class="stat-label">Total Hari</div><div class="stat-value yellow" style="font-size:1.6rem">' + data.jumlah_hari + '</div></div>' +
+        '<div class="stat-card c-cyan" style="padding:0.875rem"><div class="stat-label">Total Minggu</div><div class="stat-value cyan" style="font-size:1.6rem">' + data.jumlah_minggu + '</div></div>' +
+        '<div class="stat-card c-green" style="padding:0.875rem"><div class="stat-label">Total Bulan</div><div class="stat-value green" style="font-size:1.6rem">' + data.jumlah_bulan + '</div></div>' +
+      '</div>' +
+      '<div style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted)">' +
+        'Nabung ' + rp(data.input.amount) + ' per ' + freqLabel + ' · ' + data.jumlah_periode + ' kali nabung' +
+      '</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title">🎯 Milestone Progress</div>' +
+      data.detail_per_milestone.map(function(m) {
+        return '<div class="sim-milestone-row">' +
+          '<span class="sim-milestone-pct">' + m.persen + '%</span>' +
+          '<div class="sim-milestone-info">' +
+            '<span style="color:var(--text)">' + rp(m.nominal_milestone) + '</span>' +
+            '<span style="margin-left:0.5rem">· ' + m.jumlah_hari + ' hari · ' + m.jumlah_periode + 'x nabung</span>' +
+          '</div>' +
+          '<span class="sim-milestone-date">' + formatDate(m.estimasi_tanggal) + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+
+  document.getElementById('sim-result-wrap').innerHTML = html;
 }
 
 // ─────────────────────────────────────────────────────────────
 // RIWAYAT
 // ─────────────────────────────────────────────────────────────
-const riwayatState = { offset: 0, limit: 30, total: 0, filters: {} };
+var riwayatState = { offset: 0, limit: 30, total: 0, filters: {} };
 
 async function loadRiwayat() {
-  const { tipe, dari, sampai } = riwayatState.filters;
-  const params = { limit: riwayatState.limit, offset: riwayatState.offset };
-  if (tipe)   params.tipe            = tipe;
-  if (dari)   params.tanggal_mulai   = dari;
-  if (sampai) params.tanggal_selesai = sampai;
+  var f = riwayatState.filters;
+  var params = { limit: riwayatState.limit, offset: riwayatState.offset };
+  if (f.tipe)   params.tipe            = f.tipe;
+  if (f.dari)   params.tanggal_mulai   = f.dari;
+  if (f.sampai) params.tanggal_selesai = f.sampai;
 
-  const res = await api('getTransactions', params);
+  var res = await api('getTransactions', params);
   if (!res.success) { showToast(res.error, 'error'); return; }
 
   riwayatState.total = res.data.total;
-  const tbody = document.getElementById('riwayat-tbody');
+  var tbody = document.getElementById('riwayat-tbody');
 
   if (!res.data.transactions.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📋</div><p>Tidak ada transaksi ditemukan</p></div></td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📋</div><p>Tidak ada transaksi ditemukan</p></div></td></tr>';
   } else {
-    tbody.innerHTML = res.data.transactions.map(r => `
-      <tr>
-        <td style="white-space:nowrap;font-family:var(--font-mono);font-size:0.78rem">${formatDate(r.tanggal)}</td>
-        <td>${txBadge(r.tipe)}</td>
-        <td>${r.kategori}</td>
-        <td style="font-family:var(--font-num);font-size:1.1rem;color:${txColor(r.tipe)};white-space:nowrap">${txSign(r.tipe)}${rp(r.nominal)}</td>
-        <td style="color:var(--muted);font-size:0.8rem">${r.keterangan || '—'}</td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = res.data.transactions.map(function(r) {
+      return '<tr>' +
+        '<td style="white-space:nowrap;font-family:var(--font-mono);font-size:0.78rem">' + formatDate(r.tanggal) + '</td>' +
+        '<td>' + txBadge(r.tipe) + '</td>' +
+        '<td>' + r.kategori + '</td>' +
+        '<td style="font-family:var(--font-num);font-size:1.1rem;color:' + txColor(r.tipe) + ';white-space:nowrap">' + txSign(r.tipe) + rp(r.nominal) + '</td>' +
+        '<td style="color:var(--muted);font-size:0.8rem">' + (r.keterangan || '—') + '</td>' +
+      '</tr>';
+    }).join('');
   }
 
-  const from = riwayatState.offset + 1;
-  const to   = Math.min(riwayatState.offset + riwayatState.limit, riwayatState.total);
-  document.getElementById('riwayat-pagination-info').textContent = riwayatState.total ? `${from}–${to} dari ${riwayatState.total}` : 'Tidak ada data';
+  var from = riwayatState.offset + 1;
+  var to   = Math.min(riwayatState.offset + riwayatState.limit, riwayatState.total);
+  document.getElementById('riwayat-pagination-info').textContent = riwayatState.total ? (from + '–' + to + ' dari ' + riwayatState.total) : 'Tidak ada data';
   document.getElementById('btn-riwayat-prev').disabled = riwayatState.offset === 0;
   document.getElementById('btn-riwayat-next').disabled = riwayatState.offset + riwayatState.limit >= riwayatState.total;
 }
 
-document.getElementById('btn-riwayat-prev').addEventListener('click', () => {
+document.getElementById('btn-riwayat-prev').addEventListener('click', function() {
   riwayatState.offset = Math.max(0, riwayatState.offset - riwayatState.limit);
   loadRiwayat();
 });
-document.getElementById('btn-riwayat-next').addEventListener('click', () => {
+document.getElementById('btn-riwayat-next').addEventListener('click', function() {
   if (riwayatState.offset + riwayatState.limit < riwayatState.total) {
     riwayatState.offset += riwayatState.limit;
     loadRiwayat();
   }
 });
 
-document.getElementById('btn-filter-riwayat').addEventListener('click', () => {
+document.getElementById('btn-filter-riwayat').addEventListener('click', function() {
   riwayatState.filters = {
     tipe:   document.getElementById('riwayat-filter-tipe').value,
     dari:   document.getElementById('riwayat-filter-dari').value,
@@ -2451,7 +2977,7 @@ document.getElementById('btn-filter-riwayat').addEventListener('click', () => {
   loadRiwayat();
 });
 
-document.getElementById('btn-reset-riwayat').addEventListener('click', () => {
+document.getElementById('btn-reset-riwayat').addEventListener('click', function() {
   document.getElementById('riwayat-filter-tipe').value   = '';
   document.getElementById('riwayat-filter-dari').value   = '';
   document.getElementById('riwayat-filter-sampai').value = '';
@@ -2463,21 +2989,19 @@ document.getElementById('btn-reset-riwayat').addEventListener('click', () => {
 // ─────────────────────────────────────────────────────────────
 // PENGATURAN
 // ─────────────────────────────────────────────────────────────
-
-// Ganti Password
-document.getElementById('btn-open-ganti-pw').addEventListener('click', () => {
-  document.getElementById('pw-lama').value              = '';
-  document.getElementById('pw-baru').value              = '';
-  document.getElementById('pw-konfirmasi').value        = '';
-  document.getElementById('pw-error').style.display     = 'none';
+document.getElementById('btn-open-ganti-pw').addEventListener('click', function() {
+  document.getElementById('pw-lama').value           = '';
+  document.getElementById('pw-baru').value           = '';
+  document.getElementById('pw-konfirmasi').value     = '';
+  document.getElementById('pw-error').style.display  = 'none';
   openModal('modal-pw');
 });
 
-document.getElementById('btn-save-pw').addEventListener('click', async () => {
-  const lama       = document.getElementById('pw-lama').value;
-  const baru       = document.getElementById('pw-baru').value;
-  const konfirmasi = document.getElementById('pw-konfirmasi').value;
-  const errEl      = document.getElementById('pw-error');
+document.getElementById('btn-save-pw').addEventListener('click', async function() {
+  var lama       = document.getElementById('pw-lama').value;
+  var baru       = document.getElementById('pw-baru').value;
+  var konfirmasi = document.getElementById('pw-konfirmasi').value;
+  var errEl      = document.getElementById('pw-error');
 
   if (!lama || !baru || !konfirmasi) {
     errEl.textContent = 'Semua kolom wajib diisi.';
@@ -2496,75 +3020,74 @@ document.getElementById('btn-save-pw').addEventListener('click', async () => {
   }
 
   errEl.style.display = 'none';
-  const btn = document.getElementById('btn-save-pw');
+  var btn = document.getElementById('btn-save-pw');
   btn.disabled = true;
 
-  const lamaHash = await sha256(lama);
-  const baruHash = await sha256(baru);
-  const res = await api('changePassword', { old_password_hash: lamaHash, new_password_hash: baruHash });
+  var lamaHash = await sha256(lama);
+  var baruHash = await sha256(baru);
+  var res = await api('changePassword', { old_password_hash: lamaHash, new_password_hash: baruHash });
 
   btn.disabled = false;
 
   if (res.success) {
     closeModal('modal-pw');
     showToast('Kata sandi berhasil diubah. Silakan login ulang.', 'success');
-    setTimeout(() => { clearToken(); showLogin(); }, 2000);
+    setTimeout(function() { clearToken(); showLogin(); }, 2000);
   } else {
     errEl.textContent = res.error || 'Gagal mengubah kata sandi.';
     errEl.style.display = 'block';
   }
 });
 
-// Backup
-document.getElementById('btn-backup').addEventListener('click', async () => {
+document.getElementById('btn-backup').addEventListener('click', async function() {
   showLoading();
-  const res       = await api('getTransactions', { limit: 99999, offset: 0 });
-  const targetRes = await api('getTarget');
-  const hofRes    = await api('getHallOfFame');
-  const achRes    = await api('getAchievements');
+  var res       = await api('getTransactions', { limit: 99999, offset: 0 });
+  var targetRes = await api('getTarget');
+  var hofRes    = await api('getHallOfFame');
+  var achRes    = await api('getAchievements');
   hideLoading();
 
-  const backup = {
+  var backup = {
     backup_date  : new Date().toISOString(),
     transactions : res.success ? res.data.transactions : [],
     target       : targetRes.success ? targetRes.data : null,
     hall_of_fame : hofRes.success ? hofRes.data.hall_of_fame : [],
-    achievements : achRes.success ? achRes.data.achievements.filter(a => a.is_unlocked) : [],
+    achievements : achRes.success ? achRes.data.achievements.filter(function(a) { return a.is_unlocked; }) : [],
   };
 
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `nabung-backup-${today()}.json`;
+  var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url;
+  a.download = 'nabung-backup-' + today() + '.json';
   a.click();
   URL.revokeObjectURL(url);
   showToast('Backup berhasil diunduh', 'success');
 });
 
-// Restore
-document.getElementById('restore-file').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
+document.getElementById('restore-file').addEventListener('change', async function(e) {
+  var file = e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = async (ev) => {
-    let data;
+  var reader = new FileReader();
+  reader.onload = async function(ev) {
+    var data;
     try { data = JSON.parse(ev.target.result); }
-    catch { showToast('File backup tidak valid', 'error'); return; }
+    catch (err) { showToast('File backup tidak valid', 'error'); return; }
 
     openConfirm(
       'Pulihkan Data',
-      `File backup tanggal ${data.backup_date ? formatDate(data.backup_date.substring(0, 10)) : '?'} akan dimuat. Data lama akan tetap ada. Lanjutkan?`,
-      async () => {
+      'File backup tanggal ' + (data.backup_date ? formatDate(data.backup_date.substring(0, 10)) : '?') + ' akan dimuat. Data lama akan tetap ada. Lanjutkan?',
+      async function() {
         if (!data.transactions || !data.transactions.length) {
           showToast('Tidak ada data transaksi dalam file backup', 'info');
           return;
         }
         showLoading();
-        let ok = 0, fail = 0;
-        for (const tx of data.transactions) {
-          const res = await api('addTransaction', {
+        var ok = 0, fail = 0;
+        for (var i = 0; i < data.transactions.length; i++) {
+          var tx = data.transactions[i];
+          var r = await api('addTransaction', {
             tanggal    : String(tx.tanggal).substring(0, 10),
             tipe       : tx.tipe,
             kategori   : tx.kategori,
@@ -2572,10 +3095,10 @@ document.getElementById('restore-file').addEventListener('change', async (e) => 
             keterangan : tx.keterangan || '',
             target_id  : tx.target_id  || '',
           });
-          if (res.success) ok++; else fail++;
+          if (r.success) ok++; else fail++;
         }
         hideLoading();
-        showToast(`Restore selesai: ${ok} berhasil, ${fail} gagal`, fail > 0 ? 'info' : 'success');
+        showToast('Restore selesai: ' + ok + ' berhasil, ' + fail + ' gagal', fail > 0 ? 'info' : 'success');
       }
     );
   };
@@ -2583,23 +3106,22 @@ document.getElementById('restore-file').addEventListener('change', async (e) => 
   e.target.value = '';
 });
 
-// Reset Data
-document.getElementById('btn-open-reset').addEventListener('click', () => {
+document.getElementById('btn-open-reset').addEventListener('click', function() {
   openConfirm(
     '⚠️ Reset Semua Data',
     'Tindakan ini akan menghapus SEMUA transaksi. Data tidak dapat dipulihkan! Apakah kamu benar-benar yakin?',
-    async () => {
+    async function() {
       showLoading();
-      const res = await api('getTransactions', { limit: 99999, offset: 0 });
+      var res = await api('getTransactions', { limit: 99999, offset: 0 });
       if (!res.success) { hideLoading(); showToast('Gagal memuat data', 'error'); return; }
 
-      let deleted = 0;
-      for (const tx of res.data.transactions) {
-        const delRes = await api('deleteTransaction', { id: tx.id });
+      var deleted = 0;
+      for (var i = 0; i < res.data.transactions.length; i++) {
+        var delRes = await api('deleteTransaction', { id: res.data.transactions[i].id });
         if (delRes.success) deleted++;
       }
       hideLoading();
-      showToast(`${deleted} transaksi berhasil dihapus`, 'success');
+      showToast(deleted + ' transaksi berhasil dihapus', 'success');
     }
   );
 });
@@ -2607,7 +3129,7 @@ document.getElementById('btn-open-reset').addEventListener('click', () => {
 // ─────────────────────────────────────────────────────────────
 // CONFIRM MODAL
 // ─────────────────────────────────────────────────────────────
-let _confirmCallback = null;
+var _confirmCallback = null;
 
 function openConfirm(title, msg, callback) {
   document.getElementById('confirm-title').textContent = title;
@@ -2616,7 +3138,7 @@ function openConfirm(title, msg, callback) {
   openModal('modal-confirm');
 }
 
-document.getElementById('btn-confirm-ok').addEventListener('click', () => {
+document.getElementById('btn-confirm-ok').addEventListener('click', function() {
   closeModal('modal-confirm');
   if (_confirmCallback) { _confirmCallback(); _confirmCallback = null; }
 });
