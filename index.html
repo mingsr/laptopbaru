@@ -12,6 +12,7 @@
 /* ─── RESET & BASE ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ─── THEME VARIABLES (default: ROG Black) ──────────────────── */
 :root {
   --bg:        #0A0A0A;
   --card:      #111111;
@@ -28,6 +29,23 @@
   --font-body:  'Chakra Petch', sans-serif;
   --font-num:   'Teko', sans-serif;
   --font-mono:  'Share Tech Mono', monospace;
+
+  /* Extended theme tokens */
+  --sidebar-bg:     #111111;
+  --sidebar-border: rgba(255,255,255,0.07);
+  --input-bg:       #0d0d0d;
+  --modal-bg:       #111111;
+  --modal-top:      var(--primary);
+  --scrollbar-thumb: #2a2a2a;
+  --accent-glow:    rgba(255,214,0,0.18);
+  --accent-glow2:   rgba(0,229,255,0.12);
+  --nav-active-bg:  rgba(255,214,0,0.06);
+  --progress-track: rgba(255,255,255,0.06);
+  --table-hover:    rgba(255,255,255,0.02);
+  --toast-bg:       #161616;
+  --btn-primary-hover: #ffe033;
+  --card-radius: 10px;
+  --sidebar-header-border: rgba(255,255,255,0.07);
 }
 
 html { font-size: 16px; }
@@ -37,12 +55,13 @@ body {
   font-family: var(--font-body);
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* ─── SCROLLBAR ────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 
 /* ─── LOGIN PAGE ───────────────────────────────────────────── */
 #login-page {
@@ -62,7 +81,7 @@ body {
   left: -20%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(255,214,0,0.04) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
   pointer-events: none;
 }
 #login-page::after {
@@ -72,7 +91,7 @@ body {
   right: -20%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-glow2) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -125,7 +144,7 @@ body {
 }
 .form-group input {
   width: 100%;
-  background: #0d0d0d;
+  background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.75rem 1rem;
@@ -164,14 +183,14 @@ body {
   letter-spacing: 0.05em;
   font-weight: 700;
 }
-.btn-primary:hover:not(:disabled) { background: #ffe033; box-shadow: 0 0 20px rgba(255,214,0,0.25); }
+.btn-primary:hover:not(:disabled) { background: var(--btn-primary-hover); box-shadow: 0 0 20px var(--accent-glow); }
 
 .btn-secondary {
   background: transparent;
   color: var(--secondary);
   border-color: var(--secondary);
 }
-.btn-secondary:hover:not(:disabled) { background: rgba(0,229,255,0.08); }
+.btn-secondary:hover:not(:disabled) { background: var(--accent-glow2); }
 
 .btn-danger {
   background: transparent;
@@ -211,8 +230,8 @@ body {
   left: 0;
   width: 240px;
   height: 100vh;
-  background: var(--card);
-  border-right: 1px solid var(--border);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -221,7 +240,7 @@ body {
 
 .sidebar-header {
   padding: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--sidebar-header-border);
 }
 .sidebar-header h1 {
   font-family: var(--font-title);
@@ -272,7 +291,7 @@ body {
 .nav-item.active {
   color: var(--primary);
   border-left-color: var(--primary);
-  background: rgba(255,214,0,0.06);
+  background: var(--nav-active-bg);
 }
 .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
 
@@ -337,7 +356,7 @@ body {
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   padding: 1.5rem;
 }
 .card-sm { padding: 1rem 1.25rem; }
@@ -360,7 +379,7 @@ body {
 .stat-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   padding: 1.25rem 1.5rem;
   position: relative;
   overflow: hidden;
@@ -404,7 +423,7 @@ body {
 }
 
 /* ─── PROGRESS BAR ─────────────────────────────────────────── */
-.progress-wrap { background: rgba(255,255,255,0.06); border-radius: 99px; height: 6px; overflow: hidden; }
+.progress-wrap { background: var(--progress-track); border-radius: 99px; height: 6px; overflow: hidden; }
 .progress-bar { height: 100%; border-radius: 99px; transition: width 1s ease; }
 .progress-bar.yellow { background: var(--primary); }
 .progress-bar.cyan { background: var(--secondary); }
@@ -414,7 +433,7 @@ body {
 .target-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   padding: 1.5rem;
 }
 .target-name {
@@ -449,8 +468,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255,214,0,0.1);
-  border: 1px solid rgba(255,214,0,0.2);
+  background: var(--nav-active-bg);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 20px;
   padding: 0.3rem 0.9rem;
   font-family: var(--font-mono);
@@ -461,9 +480,9 @@ body {
 
 /* ─── QUOTE CARD ───────────────────────────────────────────── */
 .quote-card {
-  background: linear-gradient(135deg, rgba(255,214,0,0.05), rgba(0,229,255,0.03));
-  border: 1px solid rgba(255,214,0,0.12);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-glow), var(--accent-glow2));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--card-radius);
   padding: 1.25rem 1.5rem;
   position: relative;
 }
@@ -484,7 +503,7 @@ body {
   position: absolute;
   top: 0.75rem; left: 1rem;
   font-size: 3rem;
-  color: rgba(255,214,0,0.08);
+  color: rgba(255,255,255,0.05);
   font-family: Georgia, serif;
   line-height: 1;
   pointer-events: none;
@@ -540,7 +559,7 @@ body {
 .form-field select,
 .form-field textarea {
   width: 100%;
-  background: #0d0d0d;
+  background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.7rem 1rem;
@@ -555,7 +574,7 @@ body {
 .form-field select:focus,
 .form-field textarea:focus { border-color: var(--primary); }
 .form-field select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.5rem; }
-.form-field select option { background: #1a1a1a; }
+.form-field select option { background: var(--card2); }
 .form-field textarea { resize: vertical; min-height: 80px; }
 .form-hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
 
@@ -579,7 +598,7 @@ tbody td {
   vertical-align: middle;
 }
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: rgba(255,255,255,0.02); }
+tbody tr:hover td { background: var(--table-hover); }
 
 /* ─── BADGES ───────────────────────────────────────────────── */
 .badge {
@@ -610,9 +629,9 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal {
-  background: var(--card);
+  background: var(--modal-bg);
   border: 1px solid var(--border);
-  border-top: 2px solid var(--primary);
+  border-top: 2px solid var(--modal-top);
   border-radius: 12px;
   width: 100%;
   max-width: 480px;
@@ -651,7 +670,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   gap: 0.5rem;
 }
 .toast {
-  background: var(--card2);
+  background: var(--toast-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.875rem 1.25rem;
@@ -697,7 +716,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 .ach-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   padding: 1.25rem;
   position: relative;
   transition: border-color 0.2s;
@@ -720,7 +739,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 .hof-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
@@ -814,9 +833,9 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 
 /* ─── SIMULATOR RESULT ──────────────────────────────────────── */
 .sim-result-card {
-  background: linear-gradient(135deg, rgba(255,214,0,0.05), rgba(0,229,255,0.03));
-  border: 1px solid rgba(255,214,0,0.15);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-glow), var(--accent-glow2));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--card-radius);
   padding: 1.5rem;
 }
 .sim-milestone-row {
@@ -849,7 +868,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   margin-bottom: 0.6rem;
 }
 .kat-bar-label { font-size: 0.8rem; min-width: 110px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.kat-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 99px; height: 5px; overflow: hidden; }
+.kat-bar-wrap { flex: 1; background: var(--progress-track); border-radius: 99px; height: 5px; overflow: hidden; }
 .kat-bar-fill { height: 100%; border-radius: 99px; }
 .kat-bar-pct { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); min-width: 42px; text-align: right; }
 
@@ -885,7 +904,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 .settings-section {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--card-radius);
   margin-bottom: 1.5rem;
   overflow: hidden;
 }
@@ -950,6 +969,94 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   font-weight: 700;
 }
 .tab-btn:hover:not(.active) { color: var(--text); }
+
+/* ─── THEME SYSTEM ─────────────────────────────────────────── */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+.theme-card {
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative;
+}
+.theme-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.theme-card.active-theme { border-color: var(--primary); }
+.theme-card.active-theme::after {
+  content: '✓';
+  position: absolute;
+  top: 6px; right: 8px;
+  background: var(--primary);
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-title);
+}
+.theme-preview {
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.theme-preview-sidebar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 36px;
+}
+.theme-preview-main {
+  margin-left: 36px;
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.theme-preview-bar {
+  height: 6px;
+  border-radius: 3px;
+  opacity: 0.85;
+}
+.theme-preview-card-row {
+  display: flex;
+  gap: 3px;
+  margin-top: 2px;
+}
+.theme-preview-mini-card {
+  flex: 1;
+  height: 18px;
+  border-radius: 3px;
+  opacity: 0.6;
+}
+.theme-label {
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* RGB Spectrum animation */
+@keyframes rgbShift {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+body.theme-rgb-spectrum #sidebar {
+  background: linear-gradient(180deg, #0d0018 0%, #00001a 50%, #001a00 100%);
+}
+body.theme-rgb-spectrum .nav-item.active {
+  background: linear-gradient(90deg, rgba(255,0,128,0.15), rgba(0,255,255,0.08));
+}
 </style>
 </head>
 <body>
@@ -993,7 +1100,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
   <aside id="sidebar">
     <div class="sidebar-header">
       <h1>💰 Nabung</h1>
-      <p>MASA DEPAN v1.1</p>
+      <p>MASA DEPAN v1.2</p>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Utama</div>
@@ -1601,10 +1708,21 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
       <div class="page-header">
         <div class="page-header-left">
           <div class="page-title">Pengaturan</div>
-          <div class="page-subtitle">Kelola akun dan data aplikasi</div>
+          <div class="page-subtitle">Kelola akun, tampilan, dan data aplikasi</div>
         </div>
       </div>
       <div class="page-body">
+
+        <!-- ══ TEMA APLIKASI ════════════════════════════════ -->
+        <div class="settings-section">
+          <div class="settings-section-header">🎨 Tema Aplikasi</div>
+          <div style="padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);font-size:0.8rem;color:var(--muted)">
+            Pilih tema tampilan yang sesuai selera gaming kamu. Tema tersimpan otomatis.
+          </div>
+          <div class="theme-grid" id="theme-grid">
+            <!-- diisi oleh JS -->
+          </div>
+        </div>
 
         <div class="settings-section">
           <div class="settings-section-header">Akun</div>
@@ -1653,7 +1771,7 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
           <div class="settings-section-header">Informasi Aplikasi</div>
           <div class="settings-row">
             <div class="settings-label">Versi</div>
-            <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted)">1.1.0</div>
+            <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted)">1.2.0</div>
           </div>
           <div class="settings-row">
             <div class="settings-label">Backend</div>
@@ -1798,10 +1916,492 @@ tbody tr:hover td { background: rgba(255,255,255,0.02); }
 'use strict';
 
 // ─────────────────────────────────────────────────────────────
+// THEME SYSTEM
+// ─────────────────────────────────────────────────────────────
+var THEME_KEY = 'nabung_theme';
+
+var THEMES = [
+  {
+    id: 'rog-black',
+    name: 'ROG Black',
+    emoji: '🖤',
+    preview: { bg: '#0A0A0A', sidebar: '#111111', primary: '#FFD600', secondary: '#00E5FF', card: '#161616' },
+    vars: {
+      '--bg':               '#0A0A0A',
+      '--card':             '#111111',
+      '--card2':            '#161616',
+      '--primary':          '#FFD600',
+      '--secondary':        '#00E5FF',
+      '--success':          '#00FF9D',
+      '--danger':           '#FF4D4D',
+      '--text':             '#F5F5F5',
+      '--muted':            '#888888',
+      '--border':           'rgba(255,255,255,0.07)',
+      '--border-h':         'rgba(255,255,255,0.14)',
+      '--sidebar-bg':       '#111111',
+      '--sidebar-border':   'rgba(255,255,255,0.07)',
+      '--input-bg':         '#0d0d0d',
+      '--modal-bg':         '#111111',
+      '--modal-top':        '#FFD600',
+      '--scrollbar-thumb':  '#2a2a2a',
+      '--accent-glow':      'rgba(255,214,0,0.08)',
+      '--accent-glow2':     'rgba(0,229,255,0.05)',
+      '--nav-active-bg':    'rgba(255,214,0,0.06)',
+      '--progress-track':   'rgba(255,255,255,0.06)',
+      '--table-hover':      'rgba(255,255,255,0.02)',
+      '--toast-bg':         '#161616',
+      '--btn-primary-hover':'#ffe033',
+      '--card-radius':      '10px',
+      '--sidebar-header-border': 'rgba(255,255,255,0.07)',
+    }
+  },
+  {
+    id: 'tuf-military',
+    name: 'TUF Military',
+    emoji: '🪖',
+    preview: { bg: '#0f1108', sidebar: '#161a0c', primary: '#a3be00', secondary: '#e8a000', card: '#1e2210' },
+    vars: {
+      '--bg':               '#0f1108',
+      '--card':             '#161a0c',
+      '--card2':            '#1e2210',
+      '--primary':          '#a3be00',
+      '--secondary':        '#e8a000',
+      '--success':          '#7ac700',
+      '--danger':           '#e05a1c',
+      '--text':             '#e8e8d8',
+      '--muted':            '#7a7a60',
+      '--border':           'rgba(163,190,0,0.12)',
+      '--border-h':         'rgba(163,190,0,0.22)',
+      '--sidebar-bg':       '#161a0c',
+      '--sidebar-border':   'rgba(163,190,0,0.12)',
+      '--input-bg':         '#0c1008',
+      '--modal-bg':         '#161a0c',
+      '--modal-top':        '#a3be00',
+      '--scrollbar-thumb':  '#3a4020',
+      '--accent-glow':      'rgba(163,190,0,0.10)',
+      '--accent-glow2':     'rgba(232,160,0,0.08)',
+      '--nav-active-bg':    'rgba(163,190,0,0.10)',
+      '--progress-track':   'rgba(163,190,0,0.10)',
+      '--table-hover':      'rgba(163,190,0,0.04)',
+      '--toast-bg':         '#1e2210',
+      '--btn-primary-hover':'#bcd800',
+      '--card-radius':      '4px',
+      '--sidebar-header-border': 'rgba(163,190,0,0.15)',
+    }
+  },
+  {
+    id: 'cyberpunk-2077',
+    name: 'Cyberpunk 2077',
+    emoji: '⚡',
+    preview: { bg: '#060a0f', sidebar: '#0a1018', primary: '#f9e000', secondary: '#00c8ff', card: '#0d1520' },
+    vars: {
+      '--bg':               '#060a0f',
+      '--card':             '#0a1018',
+      '--card2':            '#0d1520',
+      '--primary':          '#f9e000',
+      '--secondary':        '#00c8ff',
+      '--success':          '#00e87a',
+      '--danger':           '#ff2a6d',
+      '--text':             '#e8f0ff',
+      '--muted':            '#6080a0',
+      '--border':           'rgba(0,200,255,0.10)',
+      '--border-h':         'rgba(0,200,255,0.20)',
+      '--sidebar-bg':       '#0a1018',
+      '--sidebar-border':   'rgba(0,200,255,0.12)',
+      '--input-bg':         '#060e18',
+      '--modal-bg':         '#0a1018',
+      '--modal-top':        '#00c8ff',
+      '--scrollbar-thumb':  '#1a3050',
+      '--accent-glow':      'rgba(249,224,0,0.10)',
+      '--accent-glow2':     'rgba(0,200,255,0.10)',
+      '--nav-active-bg':    'rgba(0,200,255,0.08)',
+      '--progress-track':   'rgba(0,200,255,0.08)',
+      '--table-hover':      'rgba(0,200,255,0.04)',
+      '--toast-bg':         '#0d1520',
+      '--btn-primary-hover':'#fff200',
+      '--card-radius':      '2px',
+      '--sidebar-header-border': 'rgba(0,200,255,0.15)',
+    }
+  },
+  {
+    id: 'rgb-spectrum',
+    name: 'RGB Spectrum',
+    emoji: '🌈',
+    preview: { bg: '#080010', sidebar: '#0d0018', primary: '#ff00aa', secondary: '#00ffee', card: '#100020' },
+    vars: {
+      '--bg':               '#080010',
+      '--card':             '#0d0018',
+      '--card2':            '#100020',
+      '--primary':          '#ff00aa',
+      '--secondary':        '#00ffee',
+      '--success':          '#00ff88',
+      '--danger':           '#ff3355',
+      '--text':             '#f0e8ff',
+      '--muted':            '#7755aa',
+      '--border':           'rgba(255,0,170,0.12)',
+      '--border-h':         'rgba(0,255,238,0.18)',
+      '--sidebar-bg':       '#0d0018',
+      '--sidebar-border':   'rgba(255,0,170,0.12)',
+      '--input-bg':         '#08000e',
+      '--modal-bg':         '#0d0018',
+      '--modal-top':        '#ff00aa',
+      '--scrollbar-thumb':  '#330044',
+      '--accent-glow':      'rgba(255,0,170,0.12)',
+      '--accent-glow2':     'rgba(0,255,238,0.10)',
+      '--nav-active-bg':    'rgba(255,0,170,0.10)',
+      '--progress-track':   'rgba(255,255,255,0.07)',
+      '--table-hover':      'rgba(255,0,170,0.04)',
+      '--toast-bg':         '#100020',
+      '--btn-primary-hover':'#ff44cc',
+      '--card-radius':      '12px',
+      '--sidebar-header-border': 'rgba(255,0,170,0.15)',
+    }
+  },
+  {
+    id: 'galaxy',
+    name: 'Galaxy',
+    emoji: '🌌',
+    preview: { bg: '#04041a', sidebar: '#08083a', primary: '#a78bfa', secondary: '#60a5fa', card: '#0c0c3a' },
+    vars: {
+      '--bg':               '#04041a',
+      '--card':             '#08083a',
+      '--card2':            '#0c0c48',
+      '--primary':          '#a78bfa',
+      '--secondary':        '#60a5fa',
+      '--success':          '#34d399',
+      '--danger':           '#f87171',
+      '--text':             '#e0e8ff',
+      '--muted':            '#6070aa',
+      '--border':           'rgba(167,139,250,0.12)',
+      '--border-h':         'rgba(167,139,250,0.22)',
+      '--sidebar-bg':       '#060630',
+      '--sidebar-border':   'rgba(167,139,250,0.10)',
+      '--input-bg':         '#04042a',
+      '--modal-bg':         '#08083a',
+      '--modal-top':        '#a78bfa',
+      '--scrollbar-thumb':  '#1a1a5a',
+      '--accent-glow':      'rgba(167,139,250,0.12)',
+      '--accent-glow2':     'rgba(96,165,250,0.10)',
+      '--nav-active-bg':    'rgba(167,139,250,0.10)',
+      '--progress-track':   'rgba(167,139,250,0.10)',
+      '--table-hover':      'rgba(167,139,250,0.04)',
+      '--toast-bg':         '#0c0c48',
+      '--btn-primary-hover':'#c4b0ff',
+      '--card-radius':      '14px',
+      '--sidebar-header-border': 'rgba(167,139,250,0.15)',
+    }
+  },
+  {
+    id: 'neon-purple',
+    name: 'Neon Purple',
+    emoji: '💜',
+    preview: { bg: '#0a0010', sidebar: '#120018', primary: '#d400ff', secondary: '#aa00ff', card: '#160020' },
+    vars: {
+      '--bg':               '#0a0010',
+      '--card':             '#120018',
+      '--card2':            '#160020',
+      '--primary':          '#d400ff',
+      '--secondary':        '#ff00ff',
+      '--success':          '#00ffa3',
+      '--danger':           '#ff2255',
+      '--text':             '#f0e0ff',
+      '--muted':            '#886699',
+      '--border':           'rgba(212,0,255,0.12)',
+      '--border-h':         'rgba(212,0,255,0.22)',
+      '--sidebar-bg':       '#0e0014',
+      '--sidebar-border':   'rgba(212,0,255,0.12)',
+      '--input-bg':         '#08000c',
+      '--modal-bg':         '#120018',
+      '--modal-top':        '#d400ff',
+      '--scrollbar-thumb':  '#2a003a',
+      '--accent-glow':      'rgba(212,0,255,0.12)',
+      '--accent-glow2':     'rgba(170,0,255,0.10)',
+      '--nav-active-bg':    'rgba(212,0,255,0.10)',
+      '--progress-track':   'rgba(212,0,255,0.10)',
+      '--table-hover':      'rgba(212,0,255,0.04)',
+      '--toast-bg':         '#160020',
+      '--btn-primary-hover':'#ee44ff',
+      '--card-radius':      '10px',
+      '--sidebar-header-border': 'rgba(212,0,255,0.15)',
+    }
+  },
+  {
+    id: 'matrix',
+    name: 'Matrix',
+    emoji: '🟩',
+    preview: { bg: '#000800', sidebar: '#001000', primary: '#00ff41', secondary: '#00cc33', card: '#001500' },
+    vars: {
+      '--bg':               '#000800',
+      '--card':             '#001200',
+      '--card2':            '#001800',
+      '--primary':          '#00ff41',
+      '--secondary':        '#00cc33',
+      '--success':          '#39ff14',
+      '--danger':           '#ff4400',
+      '--text':             '#ccffcc',
+      '--muted':            '#336633',
+      '--border':           'rgba(0,255,65,0.10)',
+      '--border-h':         'rgba(0,255,65,0.20)',
+      '--sidebar-bg':       '#000e00',
+      '--sidebar-border':   'rgba(0,255,65,0.10)',
+      '--input-bg':         '#000600',
+      '--modal-bg':         '#001200',
+      '--modal-top':        '#00ff41',
+      '--scrollbar-thumb':  '#003300',
+      '--accent-glow':      'rgba(0,255,65,0.10)',
+      '--accent-glow2':     'rgba(0,204,51,0.08)',
+      '--nav-active-bg':    'rgba(0,255,65,0.08)',
+      '--progress-track':   'rgba(0,255,65,0.08)',
+      '--table-hover':      'rgba(0,255,65,0.04)',
+      '--toast-bg':         '#001800',
+      '--btn-primary-hover':'#44ff66',
+      '--card-radius':      '2px',
+      '--sidebar-header-border': 'rgba(0,255,65,0.12)',
+    }
+  },
+  {
+    id: 'carbon-fiber',
+    name: 'Carbon Fiber',
+    emoji: '⚙️',
+    preview: { bg: '#111111', sidebar: '#1a1a1a', primary: '#e0e0e0', secondary: '#aaaaaa', card: '#222222' },
+    vars: {
+      '--bg':               '#111111',
+      '--card':             '#1a1a1a',
+      '--card2':            '#222222',
+      '--primary':          '#e0e0e0',
+      '--secondary':        '#aaaaaa',
+      '--success':          '#66bb6a',
+      '--danger':           '#ef5350',
+      '--text':             '#f5f5f5',
+      '--muted':            '#777777',
+      '--border':           'rgba(255,255,255,0.08)',
+      '--border-h':         'rgba(255,255,255,0.15)',
+      '--sidebar-bg':       '#161616',
+      '--sidebar-border':   'rgba(255,255,255,0.07)',
+      '--input-bg':         '#0e0e0e',
+      '--modal-bg':         '#1a1a1a',
+      '--modal-top':        '#e0e0e0',
+      '--scrollbar-thumb':  '#333333',
+      '--accent-glow':      'rgba(255,255,255,0.06)',
+      '--accent-glow2':     'rgba(255,255,255,0.04)',
+      '--nav-active-bg':    'rgba(255,255,255,0.06)',
+      '--progress-track':   'rgba(255,255,255,0.07)',
+      '--table-hover':      'rgba(255,255,255,0.03)',
+      '--toast-bg':         '#222222',
+      '--btn-primary-hover':'#ffffff',
+      '--card-radius':      '6px',
+      '--sidebar-header-border': 'rgba(255,255,255,0.07)',
+    }
+  },
+  {
+    id: 'phantom',
+    name: 'Phantom',
+    emoji: '👻',
+    preview: { bg: '#0c0c14', sidebar: '#12121e', primary: '#c0c0ff', secondary: '#8888dd', card: '#18182a' },
+    vars: {
+      '--bg':               '#0c0c14',
+      '--card':             '#12121e',
+      '--card2':            '#18182a',
+      '--primary':          '#c0c0ff',
+      '--secondary':        '#9090ee',
+      '--success':          '#80ffcc',
+      '--danger':           '#ff7788',
+      '--text':             '#e8e8ff',
+      '--muted':            '#6868a0',
+      '--border':           'rgba(192,192,255,0.10)',
+      '--border-h':         'rgba(192,192,255,0.18)',
+      '--sidebar-bg':       '#0e0e18',
+      '--sidebar-border':   'rgba(192,192,255,0.08)',
+      '--input-bg':         '#0a0a12',
+      '--modal-bg':         '#12121e',
+      '--modal-top':        '#c0c0ff',
+      '--scrollbar-thumb':  '#2a2a44',
+      '--accent-glow':      'rgba(192,192,255,0.08)',
+      '--accent-glow2':     'rgba(144,144,238,0.07)',
+      '--nav-active-bg':    'rgba(192,192,255,0.08)',
+      '--progress-track':   'rgba(192,192,255,0.08)',
+      '--table-hover':      'rgba(192,192,255,0.03)',
+      '--toast-bg':         '#18182a',
+      '--btn-primary-hover':'#ddddff',
+      '--card-radius':      '12px',
+      '--sidebar-header-border': 'rgba(192,192,255,0.10)',
+    }
+  },
+  {
+    id: 'dragon-fire',
+    name: 'Dragon Fire',
+    emoji: '🐉',
+    preview: { bg: '#120500', sidebar: '#1e0800', primary: '#ff6600', secondary: '#ff2200', card: '#200a00' },
+    vars: {
+      '--bg':               '#120500',
+      '--card':             '#1e0800',
+      '--card2':            '#200a00',
+      '--primary':          '#ff6600',
+      '--secondary':        '#ff2200',
+      '--success':          '#ffcc00',
+      '--danger':           '#ff1100',
+      '--text':             '#ffe8d0',
+      '--muted':            '#885544',
+      '--border':           'rgba(255,102,0,0.12)',
+      '--border-h':         'rgba(255,102,0,0.22)',
+      '--sidebar-bg':       '#180600',
+      '--sidebar-border':   'rgba(255,102,0,0.12)',
+      '--input-bg':         '#0e0300',
+      '--modal-bg':         '#1e0800',
+      '--modal-top':        '#ff6600',
+      '--scrollbar-thumb':  '#441100',
+      '--accent-glow':      'rgba(255,102,0,0.14)',
+      '--accent-glow2':     'rgba(255,34,0,0.10)',
+      '--nav-active-bg':    'rgba(255,102,0,0.10)',
+      '--progress-track':   'rgba(255,102,0,0.10)',
+      '--table-hover':      'rgba(255,102,0,0.04)',
+      '--toast-bg':         '#200a00',
+      '--btn-primary-hover':'#ff8833',
+      '--card-radius':      '8px',
+      '--sidebar-header-border': 'rgba(255,102,0,0.15)',
+    }
+  },
+  {
+    id: 'ocean-tech',
+    name: 'Ocean Tech',
+    emoji: '🌊',
+    preview: { bg: '#010f18', sidebar: '#021828', primary: '#00d4ff', secondary: '#0088cc', card: '#031e30' },
+    vars: {
+      '--bg':               '#010f18',
+      '--card':             '#021828',
+      '--card2':            '#031e30',
+      '--primary':          '#00d4ff',
+      '--secondary':        '#0099ee',
+      '--success':          '#00ffcc',
+      '--danger':           '#ff4488',
+      '--text':             '#c8eeff',
+      '--muted':            '#4488aa',
+      '--border':           'rgba(0,212,255,0.10)',
+      '--border-h':         'rgba(0,212,255,0.20)',
+      '--sidebar-bg':       '#021420',
+      '--sidebar-border':   'rgba(0,212,255,0.10)',
+      '--input-bg':         '#010c14',
+      '--modal-bg':         '#021828',
+      '--modal-top':        '#00d4ff',
+      '--scrollbar-thumb':  '#0a3048',
+      '--accent-glow':      'rgba(0,212,255,0.10)',
+      '--accent-glow2':     'rgba(0,153,238,0.08)',
+      '--nav-active-bg':    'rgba(0,212,255,0.08)',
+      '--progress-track':   'rgba(0,212,255,0.08)',
+      '--table-hover':      'rgba(0,212,255,0.04)',
+      '--toast-bg':         '#031e30',
+      '--btn-primary-hover':'#44eeff',
+      '--card-radius':      '14px',
+      '--sidebar-header-border': 'rgba(0,212,255,0.12)',
+    }
+  },
+  {
+    id: 'midnight-blue',
+    name: 'Midnight Blue',
+    emoji: '🌙',
+    preview: { bg: '#040816', sidebar: '#081028', primary: '#4d9fff', secondary: '#2266cc', card: '#0a1430' },
+    vars: {
+      '--bg':               '#040816',
+      '--card':             '#081028',
+      '--card2':            '#0a1430',
+      '--primary':          '#4d9fff',
+      '--secondary':        '#2266cc',
+      '--success':          '#44ddaa',
+      '--danger':           '#ee4466',
+      '--text':             '#d0e8ff',
+      '--muted':            '#4466aa',
+      '--border':           'rgba(77,159,255,0.10)',
+      '--border-h':         'rgba(77,159,255,0.18)',
+      '--sidebar-bg':       '#060c22',
+      '--sidebar-border':   'rgba(77,159,255,0.10)',
+      '--input-bg':         '#040818',
+      '--modal-bg':         '#081028',
+      '--modal-top':        '#4d9fff',
+      '--scrollbar-thumb':  '#102040',
+      '--accent-glow':      'rgba(77,159,255,0.10)',
+      '--accent-glow2':     'rgba(34,102,204,0.08)',
+      '--nav-active-bg':    'rgba(77,159,255,0.08)',
+      '--progress-track':   'rgba(77,159,255,0.08)',
+      '--table-hover':      'rgba(77,159,255,0.04)',
+      '--toast-bg':         '#0a1430',
+      '--btn-primary-hover':'#77bbff',
+      '--card-radius':      '10px',
+      '--sidebar-header-border': 'rgba(77,159,255,0.12)',
+    }
+  }
+];
+
+// ── Apply theme by ID ──────────────────────────────────────────
+function applyTheme(themeId) {
+  var theme = THEMES.find(function(t) { return t.id === themeId; });
+  if (!theme) theme = THEMES[0]; // fallback to ROG Black
+
+  var root = document.documentElement;
+  Object.keys(theme.vars).forEach(function(prop) {
+    root.style.setProperty(prop, theme.vars[prop]);
+  });
+
+  // Remove all theme-* body classes, add new one
+  document.body.className = document.body.className
+    .split(' ')
+    .filter(function(c) { return !c.startsWith('theme-'); })
+    .join(' ');
+  document.body.classList.add('theme-' + theme.id);
+
+  // Save
+  localStorage.setItem(THEME_KEY, theme.id);
+
+  // Update chart colors
+  Chart.defaults.color       = theme.vars['--muted']  || '#888';
+  Chart.defaults.borderColor = theme.vars['--border'] || 'rgba(255,255,255,0.06)';
+
+  // Update active state in grid
+  document.querySelectorAll('.theme-card').forEach(function(el) {
+    el.classList.toggle('active-theme', el.dataset.themeId === theme.id);
+  });
+}
+
+// ── Build theme grid in Pengaturan ────────────────────────────
+function buildThemeGrid() {
+  var grid = document.getElementById('theme-grid');
+  if (!grid) return;
+
+  var currentTheme = localStorage.getItem(THEME_KEY) || 'rog-black';
+
+  grid.innerHTML = THEMES.map(function(t) {
+    var p = t.preview;
+    var isActive = t.id === currentTheme;
+    return '<div class="theme-card ' + (isActive ? 'active-theme' : '') + '" data-theme-id="' + t.id + '" onclick="applyTheme(\'' + t.id + '\');buildThemeGrid();showToast(\'Tema ' + t.name + ' diterapkan ✨\',\'success\')">' +
+      '<div class="theme-preview" style="background:' + p.bg + '">' +
+        '<div class="theme-preview-sidebar" style="background:' + p.sidebar + ';border-right:1px solid rgba(255,255,255,0.06)"></div>' +
+        '<div class="theme-preview-main">' +
+          '<div class="theme-preview-bar" style="background:' + p.primary + ';width:70%"></div>' +
+          '<div class="theme-preview-bar" style="background:' + p.secondary + ';width:50%;margin-top:2px;opacity:0.7"></div>' +
+          '<div class="theme-preview-card-row">' +
+            '<div class="theme-preview-mini-card" style="background:' + p.card + ';border:1px solid rgba(255,255,255,0.08)"></div>' +
+            '<div class="theme-preview-mini-card" style="background:' + p.card + ';border:1px solid rgba(255,255,255,0.08)"></div>' +
+          '</div>' +
+          '<div class="theme-preview-bar" style="background:' + p.primary + ';width:35%;opacity:0.5;margin-top:2px"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="theme-label" style="background:' + p.sidebar + ';color:' + p.primary + '">' +
+        t.emoji + ' ' + t.name +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── Load saved theme on boot ──────────────────────────────────
+(function loadSavedTheme() {
+  var saved = localStorage.getItem(THEME_KEY) || 'rog-black';
+  applyTheme(saved);
+})();
+
+// ─────────────────────────────────────────────────────────────
 // CONFIG
 // ─────────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbwt8HGwnDW5ZolvkzAtzLuyNGbJClTUQLWivSyANcs4vxWBIsZsFVp8n8DOKQVN-auV/exec';
-const TOKEN_KEY = 'nabung_token';
+var API_URL = 'https://script.google.com/macros/s/AKfycbwt8HGwnDW5ZolvkzAtzLuyNGbJClTUQLWivSyANcs4vxWBIsZsFVp8n8DOKQVN-auV/exec';
+var TOKEN_KEY = 'nabung_token';
 
 // ─────────────────────────────────────────────────────────────
 // API LAYER
@@ -1930,7 +2530,7 @@ var PAGE_LOADERS = {
   statistik      : loadStatistik,
   simulator      : function() {},
   riwayat        : function() { riwayatState.offset = 0; loadRiwayat(); },
-  pengaturan     : function() {},
+  pengaturan     : function() { buildThemeGrid(); },
 };
 
 function goTo(pageId) {
@@ -2111,7 +2711,7 @@ async function loadDashboard() {
   var achList = document.getElementById('dash-ach-list');
   if (d.recent_achievements && d.recent_achievements.length) {
     achList.innerHTML = d.recent_achievements.map(function(a) {
-      return '<div style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.15);border-radius:8px;padding:0.5rem 0.9rem">' +
+      return '<div style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--nav-active-bg);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.5rem 0.9rem">' +
         '<span style="font-size:1.2rem">' + a.icon + '</span>' +
         '<div><div style="font-size:0.8rem;font-weight:600">' + a.nama + '</div>' +
         '<div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--muted)">' + formatDate(a.tanggal_unlock) + '</div></div></div>';
@@ -2127,8 +2727,6 @@ async function loadDashboard() {
 function buildChart7Days(data) {
   var ctx = document.getElementById('chart-7days').getContext('2d');
   if (chart7days) chart7days.destroy();
-  Chart.defaults.color       = '#888';
-  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
   chart7days = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -2825,7 +3423,6 @@ document.getElementById('btn-sim-hitung').addEventListener('click', async functi
   var amountVal  = document.getElementById('sim-amount').value.trim();
   var freq       = document.getElementById('sim-freq').value;
 
-  // Validasi
   if (!targetVal || !amountVal) {
     errEl.textContent = 'Target nominal dan nominal menabung wajib diisi.';
     errEl.style.display = 'block';
