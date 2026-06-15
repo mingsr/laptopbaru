@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nabung Untuk Masa Depan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Chakra+Petch:wght@300;400;500;600&family=Teko:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════ LOGIN ═══════════════════ -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="logo-icon">💰</span>
+      <h1>Nabung Masa Depan</h1>
+      <p>SISTEM MANAJEMEN TABUNGAN PRIBADI</p>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="Masukkan username" autocomplete="username" />
+    </div>
+    <div class="form-group">
+      <label>Kata Sandi</label>
+      <input type="password" id="login-password" placeholder="Masukkan kata sandi" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary btn-full" id="btn-login" style="margin-top:0.5rem">
+      <span id="login-btn-text">Masuk</span>
+    </button>
+    <p id="login-error" style="color:var(--danger);font-size:0.8rem;text-align:center;margin-top:0.75rem;display:none"></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ APP ════════════════════ -->
+<div id="app">
+
+  <!-- Mobile topbar -->
+  <div id="mobile-topbar">
+    <h1>💰 Nabung</h1>
+    <button class="btn btn-ghost btn-icon" id="btn-hamburger" title="Menu">☰</button>
+  </div>
+
+  <!-- Sidebar overlay -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <h1>💰 Nabung</h1>
+      <p>MASA DEPAN v1.2</p>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Utama</div>
+      <div class="nav-item active" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Ringkasan
+      </div>
+      <div class="nav-item" data-page="transaksi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Transaksi
+      </div>
+      <div class="nav-item" data-page="nabung">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></svg>
+        Nabung &amp; Tarik
+      </div>
+      <div class="nav-section">Target</div>
+      <div class="nav-item" data-page="target">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        Target Tabungan
+      </div>
+      <div class="nav-item" data-page="hall-of-fame">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Papan Prestasi
+      </div>
+      <div class="nav-section">Statistik</div>
+      <div class="nav-item" data-page="pencapaian">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21H5a2 2 0 01-2-2v-2a5 5 0 015-5h8a5 5 0 015 5v2a2 2 0 01-2 2h-3"/><circle cx="12" cy="7" r="4"/></svg>
+        Pencapaian
+      </div>
+      <div class="nav-item" data-page="statistik">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Statistik Bulanan
+      </div>
+      <div class="nav-item" data-page="simulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Simulator
+      </div>
+      <div class="nav-item" data-page="riwayat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
+        Riwayat Lengkap
+      </div>
+      <div class="nav-section">Lain-lain</div>
+      <div class="nav-item" data-page="pengaturan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Pengaturan
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebar-avatar">A</div>
+        <div>
+          <div class="user-name" id="sidebar-username">admin</div>
+          <div class="user-label" id="sidebar-level-label">Level 1</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-full btn-sm" id="btn-logout">Keluar →</button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main id="main-content">
+
+    <!-- ══════════════════ DASHBOARD ══════════════════════════ -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Ringkasan</div>
+          <div class="page-subtitle" id="dash-date">—</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-refresh-dash">↺ Muat Ulang</button>
+      </div>
+      <div class="page-body">
+
+        <!-- Quote -->
+        <div class="quote-card mb-3">
+          <div class="quote-mark">"</div>
+          <div class="quote-text" id="quote-text">Memuat kutipan hari ini...</div>
+          <div class="quote-author" id="quote-author"></div>
+        </div>
+
+        <!-- Target + Level row -->
+        <div class="grid-2 mb-3">
+          <div class="target-card">
+            <div class="card-title">Target Aktif</div>
+            <div class="target-name" id="dash-target-name">—</div>
+            <div class="target-nominal" id="dash-target-nominal">Rp—</div>
+            <div class="target-progress-label">
+              <span style="font-size:0.8rem;color:var(--muted)">Terkumpul: <span id="dash-saving">—</span></span>
+              <span class="target-persen" id="dash-persen">0%</span>
+            </div>
+            <div class="progress-wrap mb-1">
+              <div class="progress-bar yellow" id="dash-progress-bar" style="width:0%"></div>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">Kurang: <span style="color:var(--danger)" id="dash-kurang">—</span></div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem">Prediksi selesai: <span style="color:var(--secondary)" id="dash-prediksi">—</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div class="card">
+              <div class="card-title">Level &amp; XP</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                <span id="dash-level-icon" style="font-size:2rem">🥚</span>
+                <div>
+                  <div style="font-family:var(--font-title);font-size:1.1rem;font-weight:700" id="dash-level-name">Telur Menetas</div>
+                  <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted)" id="dash-level-num">LVL 1</div>
+                </div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-bar cyan" id="dash-xp-bar" style="width:0%"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--muted)">
+                <span id="dash-xp-persen">0%</span>
+                <span id="dash-level-next">→ Level 2</span>
+              </div>
+              <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--primary);margin-top:0.35rem" id="dash-total-xp">0 XP</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Streak Nabung</div>
+              <div class="streak-badge">
+                <span style="font-size:1.8rem">🔥</span>
+                <span id="dash-streak">0</span>
+                <span style="font-family:var(--font-body);font-size:0.85rem;color:var(--muted)">hari beruntun</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="grid-4 mb-3">
+          <div class="stat-card c-green">
+            <div class="stat-label">Pemasukan 30 Hari</div>
+            <div class="stat-value green" id="dash-income30">Rp0</div>
+          </div>
+          <div class="stat-card c-red">
+            <div class="stat-label">Pengeluaran 30 Hari</div>
+            <div class="stat-value red" id="dash-expense30">Rp0</div>
+          </div>
+          <div class="stat-card c-yellow">
+            <div class="stat-label">Nabung 30 Hari</div>
+            <div class="stat-value yellow" id="dash-saving30">Rp0</div>
+          </div>
+          <div class="stat-card c-cyan">
+            <div class="stat-label">Pencapaian</div>
+            <div class="stat-value cyan" id="dash-ach-count">0/0</div>
+            <div class="stat-sub" id="dash-ach-sub">terbuka</div>
+          </div>
+        </div>
+
+        <!-- Chart + Kalender -->
+        <div class="grid-2 mb-3">
+          <div class="card">
+            <div class="card-title">Grafik 7 Hari Terakhir</div>
+            <div class="chart-wrap"><canvas id="chart-7days"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Konsistensi Nabung (90 Hari)</div>
+            <div id="cal-container"></div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.75rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--muted)">
+              <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.05)"></div> Tidak nabung
+              <div style="width:10px;height:10px;border-radius:2px;background:var(--primary)"></div> Nabung
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent achievements -->
+        <div class="card">
+          <div class="flex-between mb-2">
+            <div class="card-title" style="margin-bottom:0">Pencapaian Terbaru</div>
+            <button class="btn btn-ghost btn-sm" onclick="goTo('pencapaian')">Lihat Semua →</button>
+          </div>
+          <div id="dash-ach-list" style="display:flex;gap:0.75rem;flex-wrap:wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ TRANSAKSI ══════════════════════════ -->
+    <div id="page-transaksi" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Transaksi</div>
+          <div class="page-subtitle">Catat pemasukan dan pengeluaran harian</div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-add-tx">+ Tambah Transaksi</button>
+      </div>
+      <div class="page-body">
+        <div class="card mb-3">
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-field" style="margin:0;flex:1;min-width:120px">
+              <label>Tipe</label>
+              <select id="filter-tipe">
+                <option value="">Semua Tipe</option>
+                <option value="INCOME">Pemasukan</option>
+                <option value="EXPENSE">Pengeluaran</option>
+                <option value="SAVING">Tabungan</option>
+                <option value="WITHDRAWAL">Tarik Tabungan</option>
+              </select>
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:130px">
+              <label>Dari Tanggal</label>
+              <input type="date" id="filter-dari" />
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:130px">
+              <label>Sampai Tanggal</label>
+              <input type="date" id="filter-sampai" />
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-filter-tx">Terapkan</button>
+            <button class="btn btn-ghost btn-sm" id="btn-reset-filter">Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tanggal</th><th>Tipe</th><th>Kategori</th>
+                  <th>Nominal</th><th>Keterangan</th><th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tx-tbody">
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📋</div><p>Belum ada transaksi</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <div class="pagination-info" id="tx-pagination-info">—</div>
+            <div class="pagination-btns">
+              <button class="btn btn-ghost btn-sm" id="btn-tx-prev">← Sebelumnya</button>
+              <button class="btn btn-ghost btn-sm" id="btn-tx-next">Selanjutnya →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ NABUNG & TARIK ═════════════════════ -->
+    <div id="page-nabung" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Nabung &amp; Tarik</div>
+          <div class="page-subtitle">Kelola tabungan menuju target</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="color:var(--primary)">💰 Tambah Tabungan</div>
+            <div class="form-field">
+              <label>Nominal (Rp)</label>
+              <input type="number" id="nabung-nominal" placeholder="Contoh: 50000" min="1" />
+            </div>
+            <div class="form-field">
+              <label>Tanggal</label>
+              <input type="date" id="nabung-tanggal" />
+            </div>
+            <div class="form-field">
+              <label>Kategori</label>
+              <input type="text" id="nabung-kategori" placeholder="Contoh: Gaji, Jajan hemat" />
+            </div>
+            <div class="form-field">
+              <label>Keterangan (opsional)</label>
+              <input type="text" id="nabung-ket" placeholder="Catatan tambahan..." />
+            </div>
+            <button class="btn btn-primary btn-full" id="btn-nabung">Simpan Tabungan</button>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--secondary)">🏧 Tarik Tabungan</div>
+            <div style="background:rgba(255,77,77,0.05);border:1px solid rgba(255,77,77,0.15);border-radius:6px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.8rem;color:var(--muted)">
+              ⚠️ Tarik tabungan akan mengurangi progress target. Gunakan hanya jika benar-benar perlu.
+            </div>
+            <div class="form-field">
+              <label>Nominal (Rp)</label>
+              <input type="number" id="tarik-nominal" placeholder="Jumlah yang ingin ditarik" min="1" />
+            </div>
+            <div class="form-field">
+              <label>Tanggal</label>
+              <input type="date" id="tarik-tanggal" />
+            </div>
+            <div class="form-field">
+              <label>Kategori</label>
+              <input type="text" id="tarik-kategori" placeholder="Alasan penarikan" />
+            </div>
+            <div class="form-field">
+              <label>Keterangan (opsional)</label>
+              <input type="text" id="tarik-ket" placeholder="Catatan..." />
+            </div>
+            <button class="btn btn-secondary btn-full" id="btn-tarik">Tarik Tabungan</button>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-title">Status Target Saat Ini</div>
+          <div id="nabung-target-info" style="color:var(--muted);font-size:0.875rem">Memuat data target...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ TARGET ══════════════════════════════ -->
+    <div id="page-target" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Target Tabungan</div>
+          <div class="page-subtitle">Atur dan pantau target finansialmu</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div id="target-active-section"></div>
+        <div id="target-no-target" style="display:none">
+          <div class="empty-state" style="padding:4rem 1rem">
+            <div class="empty-icon">🎯</div>
+            <p class="mb-2" style="font-size:1rem;color:var(--text)">Belum ada target aktif</p>
+            <p class="mb-3" style="color:var(--muted)">Buat target baru untuk mulai menabung dengan tujuan yang jelas.</p>
+            <button class="btn btn-primary" id="btn-buat-target-empty">+ Buat Target Baru</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ HALL OF FAME ═══════════════════════ -->
+    <div id="page-hall-of-fame" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Papan Prestasi</div>
+          <div class="page-subtitle">Target-target yang berhasil diselesaikan</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div id="hof-list">
+          <div class="empty-state"><div class="empty-icon">🏆</div><p>Belum ada target yang selesai</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ PENCAPAIAN ═════════════════════════ -->
+    <div id="page-pencapaian" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Pencapaian</div>
+          <div class="page-subtitle" id="ach-subtitle">Kumpulkan semua pencapaian!</div>
+        </div>
+      </div>
+      <div class="page-body">
+
+        <!-- Main progress bar -->
+        <div class="card mb-3">
+          <div class="flex-between mb-1">
+            <span style="font-size:0.875rem">Progress Keseluruhan</span>
+            <span style="font-family:var(--font-num);font-size:1.2rem;color:var(--primary)" id="ach-count-display">0/0</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-bar yellow" id="ach-main-progress" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Rarity stats -->
+        <div class="ach-stats-row" id="ach-stats-row">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Filter bar -->
+        <div class="ach-filter-bar" id="ach-filter-bar">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Grid -->
+        <div class="ach-grid" id="ach-grid">
+          <div class="empty-state"><p>Memuat...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ STATISTIK BULANAN ══════════════════ -->
+    <div id="page-statistik" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Statistik Bulanan</div>
+          <div class="page-subtitle">Analisis keuangan per bulan</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="card mb-3">
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-field" style="margin:0;flex:1;min-width:120px">
+              <label>Bulan</label>
+              <select id="stat-filter-bulan">
+                <option value="1">Januari</option><option value="2">Februari</option>
+                <option value="3">Maret</option><option value="4">April</option>
+                <option value="5">Mei</option><option value="6">Juni</option>
+                <option value="7">Juli</option><option value="8">Agustus</option>
+                <option value="9">September</option><option value="10">Oktober</option>
+                <option value="11">November</option><option value="12">Desember</option>
+              </select>
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:100px">
+              <label>Tahun</label>
+              <input type="number" id="stat-filter-tahun" placeholder="2025" min="2000" max="2100" />
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-stat-apply">Terapkan</button>
+          </div>
+        </div>
+        <div class="grid-4 mb-3">
+          <div class="stat-card c-green"><div class="stat-label">Total Pemasukan</div><div class="stat-value green" id="stat-income">Rp0</div></div>
+          <div class="stat-card c-red"><div class="stat-label">Total Pengeluaran</div><div class="stat-value red" id="stat-expense">Rp0</div></div>
+          <div class="stat-card c-yellow"><div class="stat-label">Total Tabungan</div><div class="stat-value yellow" id="stat-saving">Rp0</div></div>
+          <div class="stat-card c-cyan"><div class="stat-label">Saldo Bersih</div><div class="stat-value cyan" id="stat-saldo">Rp0</div></div>
+        </div>
+        <div class="card mb-3" style="padding:1rem 1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+          <div>
+            <div class="stat-label" style="margin-bottom:0.2rem">Jumlah Transaksi</div>
+            <div style="font-family:var(--font-num);font-size:2rem;color:var(--text)" id="stat-jumlah-tx">0</div>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div class="stat-label" style="margin-bottom:0.2rem">Net Tabungan (Nabung − Tarik)</div>
+            <div style="font-family:var(--font-num);font-size:2rem" id="stat-net-saving">Rp0</div>
+          </div>
+        </div>
+        <div class="grid-2 mb-3">
+          <div class="card">
+            <div class="card-title">Komposisi Pengeluaran per Kategori</div>
+            <div class="chart-wrap-pie" id="stat-pie-wrap"><canvas id="chart-expense-pie"></canvas></div>
+            <div id="stat-pie-empty" style="display:none;text-align:center;padding:2rem;color:var(--muted);font-size:0.875rem">📊 Tidak ada data pengeluaran pada periode ini.</div>
+            <div id="stat-pie-legend" style="margin-top:0.75rem"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Aktivitas Harian Bulan Ini</div>
+            <div class="chart-wrap-tall"><canvas id="chart-stat-daily"></canvas></div>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="flex-between mb-2">
+            <div class="card-title" style="margin-bottom:0">Detail Kategori</div>
+            <div class="tab-group" id="stat-kat-tabs">
+              <button class="tab-btn active" data-tipe="EXPENSE">Pengeluaran</button>
+              <button class="tab-btn" data-tipe="INCOME">Pemasukan</button>
+              <button class="tab-btn" data-tipe="SAVING">Tabungan</button>
+            </div>
+          </div>
+          <div id="stat-kat-list"><div class="empty-state" style="padding:1.5rem"><p>Tidak ada data</p></div></div>
+        </div>
+        <div class="card">
+          <div class="flex-between mb-3">
+            <div class="card-title" style="margin-bottom:0">Tren Bulanan</div>
+            <div class="tab-group" id="trend-tab-group">
+              <button class="tab-btn active" data-months="6">6 Bulan</button>
+              <button class="tab-btn" data-months="12">12 Bulan</button>
+            </div>
+          </div>
+          <div class="chart-wrap-tall"><canvas id="chart-trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ SIMULATOR ══════════════════════════ -->
+    <div id="page-simulator" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Simulator Target</div>
+          <div class="page-subtitle">Hitung estimasi waktu mencapai target tabungan</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">⚙️ Parameter Simulasi</div>
+            <div class="form-field">
+              <label>Target Nominal (Rp)</label>
+              <input type="number" id="sim-target" placeholder="Contoh: 20000000" min="1" />
+              <div class="form-hint">Jumlah uang yang ingin dicapai</div>
+            </div>
+            <div class="form-field">
+              <label>Tabungan Saat Ini (Rp)</label>
+              <input type="number" id="sim-current" placeholder="0 jika belum ada" min="0" value="0" />
+              <div class="form-hint">Nominal yang sudah terkumpul sekarang</div>
+            </div>
+            <div class="form-field">
+              <label>Nominal Menabung (Rp)</label>
+              <input type="number" id="sim-amount" placeholder="Contoh: 50000" min="1" />
+              <div class="form-hint">Jumlah yang ditabung setiap periode</div>
+            </div>
+            <div class="form-field">
+              <label>Frekuensi Menabung</label>
+              <select id="sim-freq">
+                <option value="daily">Harian (setiap hari)</option>
+                <option value="weekly">Mingguan (setiap 7 hari)</option>
+                <option value="monthly">Bulanan (setiap 30 hari)</option>
+              </select>
+            </div>
+            <p id="sim-error" style="color:var(--danger);font-size:0.8rem;display:none;margin-bottom:0.75rem"></p>
+            <button class="btn btn-primary btn-full" id="btn-sim-hitung">🔍 Hitung Estimasi</button>
+          </div>
+          <div id="sim-result-wrap">
+            <div class="empty-state" style="padding:3rem 1rem">
+              <div class="empty-icon">🧮</div>
+              <p>Isi parameter di sebelah kiri lalu klik <strong>Hitung Estimasi</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ RIWAYAT ════════════════════════════ -->
+    <div id="page-riwayat" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Riwayat Lengkap</div>
+          <div class="page-subtitle">Semua transaksi dalam satu tempat</div>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="card mb-3">
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-field" style="margin:0;flex:1;min-width:120px">
+              <label>Tipe</label>
+              <select id="riwayat-filter-tipe">
+                <option value="">Semua Tipe</option>
+                <option value="INCOME">Pemasukan</option>
+                <option value="EXPENSE">Pengeluaran</option>
+                <option value="SAVING">Tabungan</option>
+                <option value="WITHDRAWAL">Tarik Tabungan</option>
+              </select>
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:130px">
+              <label>Dari Tanggal</label>
+              <input type="date" id="riwayat-filter-dari" />
+            </div>
+            <div class="form-field" style="margin:0;flex:1;min-width:130px">
+              <label>Sampai Tanggal</label>
+              <input type="date" id="riwayat-filter-sampai" />
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-filter-riwayat">Terapkan</button>
+            <button class="btn btn-ghost btn-sm" id="btn-reset-riwayat">Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tanggal</th><th>Tipe</th><th>Kategori</th><th>Nominal</th><th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="riwayat-tbody">
+                <tr><td colspan="5"><div class="empty-state"><p>Memuat...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <div class="pagination-info" id="riwayat-pagination-info">—</div>
+            <div class="pagination-btns">
+              <button class="btn btn-ghost btn-sm" id="btn-riwayat-prev">← Sebelumnya</button>
+              <button class="btn btn-ghost btn-sm" id="btn-riwayat-next">Selanjutnya →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ PENGATURAN ═════════════════════════ -->
+    <div id="page-pengaturan" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Pengaturan</div>
+          <div class="page-subtitle">Kelola akun, tampilan, dan data aplikasi</div>
+        </div>
+      </div>
+      <div class="page-body">
+
+        <div class="settings-section">
+          <div class="settings-section-header">🎨 Tema Aplikasi</div>
+          <div style="padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);font-size:0.8rem;color:var(--muted)">
+            Pilih tema tampilan. Tersimpan otomatis di browser.
+          </div>
+          <div class="theme-grid" id="theme-grid"></div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-header">Akun</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Ganti Kata Sandi</div>
+              <div class="settings-desc">Ubah kata sandi akun untuk keamanan</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-open-ganti-pw">Ubah</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-header">Data</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Backup Data</div>
+              <div class="settings-desc">Unduh seluruh data sebagai file JSON menggunakan backup backend</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btn-backup">⬇ Unduh</button>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Pulihkan Data</div>
+              <div class="settings-desc">Muat data dari file backup JSON (format v2). Data saat ini akan diganti.</div>
+            </div>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer">
+              ⬆ Pulihkan
+              <input type="file" id="restore-file" accept=".json" style="display:none" />
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-header">Bahaya</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label" style="color:var(--danger)">Reset Semua Data</div>
+              <div class="settings-desc">Hapus semua transaksi. Tidak dapat dibatalkan!</div>
+            </div>
+            <button class="btn btn-danger btn-sm" id="btn-open-reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-header">Informasi Aplikasi</div>
+          <div class="settings-row">
+            <div class="settings-label">Versi</div>
+            <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted)">1.2.0</div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-label">Backend</div>
+            <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted)">Google Apps Script + Sheets</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════ MODALS ═══════════════════════ -->
+
+<!-- Modal Tambah/Edit Transaksi -->
+<div class="modal-overlay" id="modal-tx">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-tx-title">Tambah Transaksi</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-tx')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tx-edit-id" />
+      <div class="form-row">
+        <div class="form-field">
+          <label>Tipe Transaksi</label>
+          <select id="tx-tipe">
+            <option value="INCOME">Pemasukan</option>
+            <option value="EXPENSE">Pengeluaran</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Tanggal</label>
+          <input type="date" id="tx-tanggal" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Kategori</label>
+          <input type="text" id="tx-kategori" placeholder="Contoh: Gaji, Makan, Transportasi" />
+        </div>
+        <div class="form-field">
+          <label>Nominal (Rp)</label>
+          <input type="number" id="tx-nominal" placeholder="0" min="1" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Keterangan (opsional)</label>
+        <input type="text" id="tx-keterangan" placeholder="Catatan tambahan..." />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-tx')">Batal</button>
+      <button class="btn btn-primary" id="btn-save-tx">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ganti Password -->
+<div class="modal-overlay" id="modal-pw">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ganti Kata Sandi</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-pw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label>Kata Sandi Lama</label>
+        <input type="password" id="pw-lama" placeholder="Masukkan kata sandi saat ini" />
+      </div>
+      <div class="form-field">
+        <label>Kata Sandi Baru</label>
+        <input type="password" id="pw-baru" placeholder="Minimal 6 karakter" />
+      </div>
+      <div class="form-field">
+        <label>Konfirmasi Kata Sandi Baru</label>
+        <input type="password" id="pw-konfirmasi" placeholder="Ulangi kata sandi baru" />
+      </div>
+      <p id="pw-error" style="color:var(--danger);font-size:0.8rem;display:none"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-pw')">Batal</button>
+      <button class="btn btn-primary" id="btn-save-pw">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Target -->
+<div class="modal-overlay" id="modal-target">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-target-title">Buat Target Baru</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-target')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label>Nama Target</label>
+        <input type="text" id="target-nama" placeholder="Contoh: ASUS TUF Gaming A15" />
+      </div>
+      <div class="form-field">
+        <label>Target Nominal (Rp)</label>
+        <input type="number" id="target-nominal-input" placeholder="Contoh: 20000000" min="1" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-target')">Batal</button>
+      <button class="btn btn-primary" id="btn-save-target">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title" id="confirm-title">Konfirmasi</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-confirm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-msg" style="font-size:0.9rem;line-height:1.5"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Batal</button>
+      <button class="btn btn-danger" id="btn-confirm-ok">Ya, Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay"><div class="spinner"></div></div>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- App -->
+<script src="app.js"></script>
+
+</body>
+</html>
